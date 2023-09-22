@@ -6,91 +6,143 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-
-namespace references
+namespace JoshKery.York.AudioRecordingBooth
 {
 	public class AudioRecorderProcess : ExternalProcess
 	{
+        /// <summary>
+        /// Executable file for external processes.
+        /// </summary>
 		private const string FFMPEG = "ffmpeg";
 
-		private string startRecordingTemplate = "-f dshow -y -i audio=\"{0}\" {1}";
+        /// <summary>
+        /// Template for ffmpeg for recording from an audio input device on Windows with overwrite
+        /// </summary>
+		private string STARTRECORDINGTEMPLATE = "-f dshow -y -i audio=\"{0}\" {1}";
 
-		private string stopRecordingTemplate = @"q";
+        /// <summary>
+        /// Template to issue to ffmpeg process to exit
+        /// </summary>
+		private string STOPRECORDINGTEMPLATE = "q";
 
-		private string testTemplate = "-version";
+        /// <summary>
+        /// Is set to true when RecordingStarted callback is invoked, set to false when RecordingAllFinished is invoked
+        /// </summary>
+        public bool isRecording { get; private set; } = false;
+            
 
-		void Start()
+        #region Public UnityEvents
+        private UnityEvent _onRecordingStarted;
+        /// <summary>
+        /// Invoked AFTER private RecordingStarted callback is invoked
+        /// </summary>
+        public UnityEvent onRecordingStarted
+        {
+            get
+            {
+                if (_onRecordingStarted == null)
+                    _onRecordingStarted = new UnityEvent();
+
+                return _onRecordingStarted;
+            }
+        }
+
+        private UnityEvent _onRecordingFinished;
+        /// <summary>
+        /// Invoked AFTER private RecordingAllFinished callback is invoked
+        /// </summary>
+        public UnityEvent onRecordingFinished
+        {
+            get
+            {
+                if (_onRecordingFinished == null)
+                    _onRecordingFinished = new UnityEvent();
+
+                return _onRecordingFinished;
+            }
+        }
+        #endregion
+
+        void Start()
 		{
-			processFileName = FFMPEG;
+			defaultProcessFileName = FFMPEG;
 		}
 
-    
-        //2. Use Exit Codes
-        //2. Modify base class to allow standardinput or to return Process so that I cans close it
-
-		public void StartRecording(string deviceName, string fileOut, Action callback)
+        /// <summary>
+        /// Format the parameters into the STARTRECORDINGTEMPLATE
+        /// And pass that command string along to the external process thread via Run
+        /// </summary>
+        /// <param name="deviceName">Name of audio input device</param>
+        /// <param name="fileOut">Path to save audio file to</param>
+        private void StartRecording(string deviceName, string fileOut)
         {
-            Run(new Settings(processFileName, string.Format(startRecordingTemplate, deviceName, fileOut), callback));
-
-/*            string command = string.Format(startRecordingTemplate, deviceName, fileOut);
-            UnityEngine.Debug.Log("This is the ffmpeg string being passed to the process: " + command);
-
-            try
+            if (!isRecording)
             {
-                Process myProcess = new Process();
-                myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                myProcess.StartInfo.CreateNoWindow = true;
-                myProcess.StartInfo.UseShellExecute = false;
-                myProcess.StartInfo.FileName = "ffmpeg";
-                myProcess.StartInfo.Arguments = command;
-                myProcess.EnableRaisingEvents = true;
-                myProcess.Start();
-                myProcess.WaitForExit();
-                int ExitCode = myProcess.ExitCode;
-                print("Process exited : " + ExitCode);
-
+                Run(
+                    new Settings(
+                        FFMPEG,
+                        string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut),
+                        STOPRECORDINGTEMPLATE,
+                        RecordingStarted,
+                        RecordingAllFinished
+                    )
+                );
             }
-            catch (Exception e)
-            {
-                print("Process exception: " + e);
-            }*/
         }
 
-		public void StopRecording()
+        /// <summary>
+        /// Signals a System.Threading.AutoResetEvent to let the external process thread continue
+        /// and issue the STOPRECORDINGTEMPLATE command to the active process
+        /// </summary>
+		private void StopRecording()
         {
-			
+            exitEvent.Set();
         }
 
+        /// <summary>
+        /// Public method for starting the recording.
+        /// </summary>
 		public void OnStartRecording()
         {
-			StartRecording("Microphone Array (AMD Audio Device)", "out.mp3", null);
+			StartRecording("Microphone Array (AMD Audio Device)", "out.mp3");
         }
 
-		public void TestProcess()
+        /// <summary>
+        /// Public method for stopping the recording.
+        /// </summary>
+        public void OnStopRecording()
         {
-            UnityEngine.Debug.Log("This is the ffmpeg string being passed to the process: " + testTemplate);
-
-            try
-            {
-                Process myProcess = new Process();
-                myProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal; //Hidden
-                myProcess.StartInfo.CreateNoWindow = false;
-                myProcess.StartInfo.UseShellExecute = false;
-                myProcess.StartInfo.FileName = "ffmpeg";
-                myProcess.StartInfo.Arguments = testTemplate;
-                myProcess.EnableRaisingEvents = true;
-                myProcess.Start();
-                myProcess.WaitForExit();
-                int ExitCode = myProcess.ExitCode;
-                print("Process exited : " + ExitCode);
-            }
-            catch (Exception e)
-            {
-                print("Process exception: " + e);
-            }
+            StopRecording();
         }
 
+        /// <summary>
+        /// Callback invoked at the start of each Process in the StartRecording command strings.
+        /// </summary>
+        private void RecordingStarted()
+        {
+            isRecording = true;
+
+            onRecordingStarted.Invoke();
+        }
+
+        /// <summary>
+        /// Callback invoked after all processes in the StartRecording command strings are complete.
+        /// </summary>
+        /// <param name="exitCodes"></param>
+        private void RecordingAllFinished(int[] exitCodes)
+        {
+            isRecording = false;
+
+            UnityEngine.Debug.Log("all finished");
+            foreach (int exitCode in exitCodes)
+            {
+                UnityEngine.Debug.Log(exitCode);
+            }
+
+            onRecordingFinished.Invoke();
+        }
 	}
 
 }
