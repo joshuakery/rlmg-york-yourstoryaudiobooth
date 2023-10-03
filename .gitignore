@@ -72,7 +72,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # Custom
+**/out.mp3
 /[Aa]ssets/I0plus/*
 /[Aa]ssets/I0plus.meta
 /[Aa]ssets/TextMesh Pro/*
 /[Aa]ssets/TextMesh Pro.meta
+/[Aa]ssets/com.unity.uiextensions/*
+/[Aa]ssets/com.unity.uiextensions.meta
+/[Aa]ssets/Plugins/*
+/[Aa]ssets/Plugins.meta
+/[Aa]ssets/[Ss]treamingAssets/recordings/*
+/[Aa]ssets/[Ss]treamingAssets/recordings.meta
+out.mp3

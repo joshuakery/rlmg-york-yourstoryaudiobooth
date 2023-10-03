@@ -1,6 +1,5 @@
-using System;
-using System.Diagnostics;
-using System.Threading;
+
+using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 using System.Collections;
@@ -12,6 +11,11 @@ namespace JoshKery.York.AudioRecordingBooth
 {
 	public class AudioRecorderProcess : ExternalProcess
 	{
+        [SerializeField]
+        private string OUTFILENAME = "out.mp3";
+
+        private string outFilePath;
+
         /// <summary>
         /// Executable file for external processes.
         /// </summary>
@@ -27,10 +31,15 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private string STOPRECORDINGTEMPLATE = "q";
 
-        /// <summary>
-        /// Is set to true when RecordingStarted callback is invoked, set to false when RecordingAllFinished is invoked
-        /// </summary>
-        public bool isRecording { get; private set; } = false;
+        private Task currentTask;
+
+        public bool isRecording
+        {
+            get
+            {
+                return currentTask != null && !currentTask.IsCompleted;
+            }
+        }
             
 
         #region Public UnityEvents
@@ -68,6 +77,8 @@ namespace JoshKery.York.AudioRecordingBooth
         void Start()
 		{
 			defaultProcessFileName = FFMPEG;
+
+            outFilePath = Path.Combine(Application.streamingAssetsPath, OUTFILENAME);
 		}
 
         /// <summary>
@@ -78,14 +89,13 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <param name="fileOut">Path to save audio file to</param>
         private void StartRecording(string deviceName, string fileOut)
         {
-            if (!isRecording)
+            if (currentTask == null || currentTask.IsCompleted)
             {
-                Run(
+                currentTask = Run(
                     new Settings(
                         FFMPEG,
                         string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut),
                         STOPRECORDINGTEMPLATE,
-                        RecordingStarted,
                         RecordingAllFinished
                     )
                 );
@@ -98,7 +108,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private void StopRecording()
         {
-            exitEvent.Set();
+            standardInputEvent.Set();
         }
 
         /// <summary>
@@ -106,7 +116,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		public void OnStartRecording()
         {
-			StartRecording("Microphone Array (AMD Audio Device)", "out.mp3");
+			StartRecording("Microphone Array (AMD Audio Device)", outFilePath);
         }
 
         /// <summary>
@@ -117,15 +127,7 @@ namespace JoshKery.York.AudioRecordingBooth
             StopRecording();
         }
 
-        /// <summary>
-        /// Callback invoked at the start of each Process in the StartRecording command strings.
-        /// </summary>
-        private void RecordingStarted()
-        {
-            isRecording = true;
-
-            onRecordingStarted.Invoke();
-        }
+        
 
         /// <summary>
         /// Callback invoked after all processes in the StartRecording command strings are complete.
@@ -133,8 +135,6 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <param name="exitCodes"></param>
         private void RecordingAllFinished(int[] exitCodes)
         {
-            isRecording = false;
-
             UnityEngine.Debug.Log("all finished");
             foreach (int exitCode in exitCodes)
             {

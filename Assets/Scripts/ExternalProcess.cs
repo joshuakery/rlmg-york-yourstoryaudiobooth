@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.IO;
 using System;
 using UnityEngine;
@@ -39,7 +40,9 @@ namespace JoshKery.York.AudioRecordingBooth
 		/// <summary>
 		/// When signalled, process will continue, issue its exit command, and WaitForExit.
 		/// </summary>
-		protected static AutoResetEvent exitEvent = new AutoResetEvent(false);
+		protected static AutoResetEvent standardInputEvent = new AutoResetEvent(false);
+
+		private CancellationTokenSource currentTokenSource = new CancellationTokenSource();
 
 		void OnDestroy()
 		{
@@ -47,91 +50,118 @@ namespace JoshKery.York.AudioRecordingBooth
 			//like clear Process?
 		}
 
+		public void OnCancelTask()
+		{
+			if (currentTokenSource != null)
+            {
+				UnityEngine.Debug.Log("cancel");
+				currentTokenSource.Cancel();
+				
+				standardInputEvent.Set();
+				currentTokenSource.Dispose();
+			}
+				
+		}
+
 		/// <summary>
 		/// Setup SynchronizationContext and callback wrappers, exitEvent and queue thread
 		/// </summary>
 		/// <param name="settings">Settings which will be passed as an object to WaitCallback(threadFunction)</param>
-		public void Run(Settings settings)
+		public Task Run(Settings settings)
 		{
-			if (settings == null) return;
+			if (settings == null) return null;
 			if (string.IsNullOrEmpty(settings.process)) settings.process = defaultProcessFileName;
-			if (!settings.isValid) return;
+			if (!settings.isValid) return null;
 
 			//Setup SynchronizationContext for use in calling callbacks on main Unity thread
 			var syncContext = SynchronizationContext.Current;
 
-
-			if (settings.startCallback != null)
-				settings.startCallbackWrapper = new StartCallbackWrapper(() => syncContext.Post(_ => settings.startCallback(), null));
-
-
-			settings.allFinishedCallbackWrapper = new AllFinishedCallbackWrapper(exitCodes => syncContext.Post(_ => settings.allFinishedCallback(exitCodes), null));
+			if (settings.allFinishedCallback != null)
+				settings.allFinishedCallbackWrapper = new AllFinishedCallbackWrapper(exitCodes => syncContext.Post(_ => settings.allFinishedCallback(exitCodes), null));
 
 			//Assign autoResetEvent to wait on if there are any exit commands for a command
-			settings.exitEvent = exitEvent;
+			settings.standardInputEvent = standardInputEvent;
 
-			ThreadPool.QueueUserWorkItem(new WaitCallback(run), settings);
+			currentTokenSource = new CancellationTokenSource();
+			settings.token = currentTokenSource.Token;
+
+			Task externalProcessTask = Task.Run( () => ExternalProcessTaskAction(settings), settings.token );
+
+			return externalProcessTask;
 		}
 
 		/// <summary>
 		/// Thread function to run external process.
 		/// </summary>
-		/// <param name="obj">Settings used to start up process, including sync'd callbacks and exitEvent</param>
-		void run(object obj)
+		/// <param name="obj">Gets cast to Settings used to start up process, including sync'd callbacks and exitEvent</param>
+		void ExternalProcessTaskAction(Settings settings)
 		{
-			var settings = obj as Settings;
 			if (!settings.isValid) return;
+
+			if (settings.token.IsCancellationRequested)
+			{
+				UnityEngine.Debug.Log("Task was cancelled before it got started.");
+				settings.token.ThrowIfCancellationRequested();
+			}
 
 			ProcessStartInfo startInfo = new ProcessStartInfo(settings.process);
 
-			// UseShellExecute must be false and RedirectStandardInput must be true to pass commands to the active Process
+			// UseShellExecute must be false and RedirectStandardInput must be true to pass standardInput to the active Process
 			startInfo.UseShellExecute = string.IsNullOrEmpty(startInfo.FileName);
 			startInfo.RedirectStandardInput = true; //if UseShellExecute is true, then StandardInput won't work
 
 			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			startInfo.CreateNoWindow = true;
 
-			Process process = new Process();
+			Process process;
 
 			// These exitCodes will be passed to the main Unity thread via settings.callback
 			int[] exitCodes = new int[settings.commands.Length];
-
+			
 			// Run each command
-			for (int i = 0; i < settings.commands.Length; i++)
+			for (int commandIndex = 0; commandIndex < settings.commands.Length; commandIndex++)
 			{
-				startInfo.Arguments = settings.commands[i];
+				startInfo.Arguments = settings.commands[commandIndex];
 
 				try
 				{
 					using (process = new Process())
 					{
-						process = new Process();
-
 						process.StartInfo = startInfo;
+
+						//Do give us our exit codes
 						process.EnableRaisingEvents = true;
+
 						process.Start();
 
-						if (settings.startCallbackWrapper != null)
-							settings.startCallbackWrapper();
-
-						if (settings.ShouldWaitForExitCommand(i))
+						if (settings.ShouldWaitForNextStandardInput(commandIndex, 0))
 						{
 							//StandardInput is used to pass commands to the Process, as you would be able to in a command line window
 							StreamWriter streamWriter = process.StandardInput;
 
-							//The thread should wait until the autoResetEvent is signalled
-							settings.exitEvent.WaitOne();
+							for (int inputIndex = 0; inputIndex < settings.standardInput[commandIndex].Length; inputIndex++)
+							{
+								//The thread should wait until the autoResetEvent is signalled
+								settings.standardInputEvent.WaitOne();
 
-							//Then the exitCommand can be passed to this Process
-							streamWriter.WriteLine(settings.exitCommands[i]);
+								if (settings.token.IsCancellationRequested)
+                                {
+									process.Kill();
+									settings.token.ThrowIfCancellationRequested();
+									return;
+                                }
+
+								//Then the exitCommand can be passed to this Process
+								streamWriter.WriteLine(settings.standardInput[commandIndex][inputIndex]);
+							}
 
 							//Cleanup the StandardInput
 							streamWriter.Close();
 						}
 
-						//Wait to save file?
+						//Wait for file to save
 						process.WaitForExit();
-						exitCodes[i] = process.ExitCode;
+						exitCodes[commandIndex] = process.ExitCode;
 					}
 
 				}
@@ -139,11 +169,24 @@ namespace JoshKery.York.AudioRecordingBooth
 				{
 					//do nothing
 				}
+				finally
+                {
+					
+				}
 
+			}//end for loop
+
+			//Not sure why this check needs to be performed.
+			//I am expecting the return above to short-circuit(?) the rest of the Task
+			//and therefore for this code to never be reached
+			//and yet it is...
+			if (!settings.token.IsCancellationRequested)
+            {
+				//Finally invoke the sync'd callback to return the exit codes
+				if (settings.allFinishedCallbackWrapper != null)
+					settings.allFinishedCallbackWrapper.Invoke(exitCodes);
 			}
 
-			if (settings.allFinishedCallback != null)
-				settings.allFinishedCallbackWrapper(exitCodes);
 
 		}
 
@@ -167,34 +210,19 @@ namespace JoshKery.York.AudioRecordingBooth
 			/// Commands that would be sent line by line to the process, as they would be in a separate command line window.
 			/// This class uses these commands, if there are any, to pass via StandardInput to the active process.
 			/// </summary>
-			public string[] exitCommands;
-
-			/// <summary>
-			/// Callback invoked at the start of each process.
-			/// </summary>
-			public Action startCallback;
-
-			/// <summary>
-			/// Callback invoked at the end of all the processes.
-			/// The int[] parameter is for passing back the processes' exit codes to the main Unity thread.
-			/// </summary>
-			public Action<int[]> allFinishedCallback;
-
-			/// <summary>
-			/// Helper delegate used for the callback after each process is started.
-			/// </summary>
-			public StartCallbackWrapper startCallbackWrapper;
-
-			/// <summary>
-			/// Helper delegate used for the callback when all processes are finished.
-			/// </summary>
-			public AllFinishedCallbackWrapper allFinishedCallbackWrapper;
+			public string[][] standardInput;
 
 			/// <summary>
 			/// Synchronization event that the thread will wait on until signalling from the main thread for it to
-			/// pass the exitcommand to the active Process.
+			/// pass the next standard input string to the active Process.
 			/// </summary>
-			public AutoResetEvent exitEvent;
+			public AutoResetEvent standardInputEvent;
+
+			public Action<int[]> allFinishedCallback;
+
+			public AllFinishedCallbackWrapper allFinishedCallbackWrapper;
+
+			public CancellationToken token;
 
 			/// <summary>
 			/// Checks that there is a process file to run and commands to issue to it.
@@ -216,49 +244,70 @@ namespace JoshKery.York.AudioRecordingBooth
 			/// Checks if there are exit commands to issue to the command corresponding to the given index
 			/// </summary>
 			/// <param name="commandIndex">Index of given command in settings.commands</param>
+			/// <param name="standardInputIndex">Index of standard input for the given command</param>
 			/// <returns></returns>
-			public bool ShouldWaitForExitCommand(int commandIndex)
+			public bool ShouldWaitForNextStandardInput(int commandIndex, int standardInputIndex)
 			{
-				return exitCommands != null &&
-					   exitCommands.Length > commandIndex &&
-					   !string.IsNullOrEmpty(exitCommands[commandIndex]);
+				return commands != null &&
+					   commandIndex < commands.Length &&
+					   standardInput != null &&
+					   commandIndex < standardInput.Length &&
+					   standardInput[commandIndex] != null &&
+					   standardInputIndex < standardInput[commandIndex].Length &&
+					   !string.IsNullOrEmpty(standardInput[commandIndex][standardInputIndex]);
 			}
 
 			public Settings(
 				string process,
 				string command,
-				string exitCommand,
-				Action startCallback,
-				Action<int[]> allFinishedCallback
+				Action<int[]> allFinishedCallback = null
 			)
 			{
-				Set(process, new string[] { command }, new string[] { exitCommand }, startCallback, allFinishedCallback);
+				Set(process, new string[] { command }, allFinishedCallback);
+			}
+
+			public Settings(
+				string process,
+				string command,
+				string standardInput = null,
+				Action<int[]> allFinishedCallback = null
+			)
+			{
+				Set(process, new string[] { command }, new string[][] { new string[] { standardInput } }, allFinishedCallback);
 			}
 			public Settings(
 				string process,
 				string[] commands,
-				string[] exitCommands,
-				Action startCallback,
-				Action<int[]> allFinishedCallback
+				string[][] standardInput = null,
+				Action<int[]> allFinishedCallback = null
 			)
 			{
-				Set(process, commands, exitCommands, startCallback, allFinishedCallback);
+				Set(process, commands, standardInput, allFinishedCallback);
 			}
 
 			public void Set(
 				string process,
 				string[] commands,
-				string[] exitCommands,
-				Action startCallback,
-				Action<int[]> allFinishedCallback
+				Action<int[]> allFinishedCallback = null
+			)
+			{
+				this.process = process;
+				this.commands = commands;
+				this.allFinishedCallback = allFinishedCallback;
+			}
+
+			public void Set(
+				string process,
+				string[] commands,
+				string[][] standardInput = null,
+				Action<int[]> allFinishedCallback = null
 			)
 			{
 				this.process = process;
 
 				this.commands = commands;
-				this.exitCommands = exitCommands;
+				this.standardInput = standardInput;
 
-				this.startCallback = startCallback;
 				this.allFinishedCallback = allFinishedCallback;
 			}
 		}
