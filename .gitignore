@@ -75,6 +75,10 @@ crashlytics-build.properties
 **/out.mp3
 /[Aa]ssets/I0plus/*
 /[Aa]ssets/I0plus.meta
+/[Aa]ssets/Le Tai's Asset/*
+/[Aa]ssets/Le Tai's Asset.meta
+/[Aa]ssets/ProceduralUIImage/*
+/[Aa]ssets/ProceduralUIImage.meta
 /[Aa]ssets/TextMesh Pro/*
 /[Aa]ssets/TextMesh Pro.meta
 /[Aa]ssets/com.unity.uiextensions/*

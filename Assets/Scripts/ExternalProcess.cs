@@ -22,87 +22,229 @@ namespace JoshKery.York.AudioRecordingBooth
 	public class ExternalProcess : MonoBehaviour
 	{
 		/// <summary>
+		/// Timeout for ExternalProcessAction Task.
+		/// Milliseconds.
+		/// </summary>
+		private const int DEFAULTTIMEOUT = 60000;
+
+
+		/// <summary>
 		/// Default executable file to use in the process if none is specified
 		/// </summary>
 		public string defaultProcessFileName;
 
-		/// <summary>
-		/// Helper wrapper around settings.startCallback
-		/// </summary>
-		public delegate void StartCallbackWrapper();
+		public delegate void OnFailEvent(Exception e);
 
 		/// <summary>
-		/// Helper wrapper around settings.allFinishedCallback
+		/// Event invoked when an exception is thrown during the Main Task.
 		/// </summary>
-		/// <param name="exitCodes">Codes, one for each process, corresponding to settings.commands</param>
-		public delegate void AllFinishedCallbackWrapper(int[] exitCodes);
+		public OnFailEvent onFail;
+
+		public delegate void OnSuccessEvent();
+
+		/// <summary>
+		/// Event invoked when the Main Task completes successfully.
+		/// </summary>
+		public OnSuccessEvent onSuccess;
+
+		public delegate void OnFirstProcessStartedEvent();
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public OnFirstProcessStartedEvent onFirstProcessStarted;
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="exitCodes">Exit codes from processes</param>
+		public delegate void OnAllProcessSuccessEvent(int[] exitCodes);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public OnAllProcessSuccessEvent onAllProcessSuccess;
+
+		public delegate void InitEvent();
+		public InitEvent onInit;
 
 		/// <summary>
 		/// When signalled, process will continue, issue its exit command, and WaitForExit.
 		/// </summary>
 		protected static AutoResetEvent standardInputEvent = new AutoResetEvent(false);
 
-		private CancellationTokenSource currentTokenSource = new CancellationTokenSource();
+		protected CancellationTokenSource currentTokenSource = null;
+
+		/// <summary>
+		/// The Task currently underway.
+		/// </summary>
+		public Task currentTask;
+
+		private readonly object currentProcessLock = new object();
+		protected int currentProcess = -1;
+
+		public bool isRunning
+		{
+			get
+			{
+				return currentTask != null && !currentTask.IsCompleted;
+			}
+		}
 
 		void OnDestroy()
 		{
 			// TODO Clean things up?
-			//like clear Process?
 		}
 
-		public void OnCancelTask()
+        private void OnApplicationQuit()
+        {
+			if (isRunning)
+				UnityEngine.Debug.Log("Application quit while recording underway. Attempting to cancel...");
+
+			CancelTask();
+        }
+
+        public void OnCancelTask()
 		{
+			UnityEngine.Debug.Log("User issued command to cancel external process...");
+			CancelTask();
+		}
+
+		public void CancelTask()
+        {
 			if (currentTokenSource != null)
-            {
-				UnityEngine.Debug.Log("cancel");
+			{
 				currentTokenSource.Cancel();
-				
 				standardInputEvent.Set();
-				currentTokenSource.Dispose();
 			}
-				
 		}
 
 		/// <summary>
-		/// Setup SynchronizationContext and callback wrappers, exitEvent and queue thread
+		/// Runs Main external process Task.
+		/// Sets up cancellation token.
+		/// Sets up SynchronizationContext and callback wrappers.
+		/// Sets up exitEvent.
 		/// </summary>
-		/// <param name="settings">Settings which will be passed as an object to WaitCallback(threadFunction)</param>
-		public Task Run(Settings settings)
+		/// <param name="settings">Settings which will be passed to ExternalProcessActionparam>
+		public void Run(Settings settings, int timeout = DEFAULTTIMEOUT)
 		{
-			if (settings == null) return null;
+			if (settings == null) return;
 			if (string.IsNullOrEmpty(settings.process)) settings.process = defaultProcessFileName;
-			if (!settings.isValid) return null;
+			if (!settings.isValid) return;
 
-			//Setup SynchronizationContext for use in calling callbacks on main Unity thread
+			// Setup SynchronizationContext for use in calling callbacks on main Unity thread
 			var syncContext = SynchronizationContext.Current;
 
-			if (settings.allFinishedCallback != null)
-				settings.allFinishedCallbackWrapper = new AllFinishedCallbackWrapper(exitCodes => syncContext.Post(_ => settings.allFinishedCallback(exitCodes), null));
+			// invoked when Main Task raises an exception
+			settings.onFailWrapper = new Action<Exception>(e => { syncContext.Post(_ => OnFail(e), null); });
 
-			//Assign autoResetEvent to wait on if there are any exit commands for a command
+			// invoked when Main Task completes successfully
+			settings.onSuccessWrapper = new Action(() => syncContext.Post(_ => OnSuccess(), null));
+
+			settings.onFirstProcessStartedWrapper = new Action(() => syncContext.Post(_ => OnFirstProcessStarted(), null));
+
+			// invoked when ExternalProcessTask completes successfully
+			settings.onAllProcessFinishedWrapper = new Action<int[]>(
+					exitCodes => syncContext.Post(_ => OnAllProcessSuccess(exitCodes), null)
+				);
+
+
+			// Assign autoResetEvent to wait on if there are any exit commands for a command
 			settings.standardInputEvent = standardInputEvent;
 
+			// Setup cancellation token
 			currentTokenSource = new CancellationTokenSource();
-			settings.token = currentTokenSource.Token;
+			settings.ctoken = currentTokenSource.Token;
 
-			Task externalProcessTask = Task.Run( () => ExternalProcessTaskAction(settings), settings.token );
+			currentTask = Task.Run( () => Main(settings, timeout), settings.ctoken );
+		}
 
-			return externalProcessTask;
+		private void Main(Settings settings, int timeout = DEFAULTTIMEOUT)
+        {
+			if (settings == null) return;
+			if (string.IsNullOrEmpty(settings.process)) settings.process = defaultProcessFileName;
+			if (!settings.isValid) return;
+
+			Task mainTask = Task.Run(() => ExternalProcessAction(settings), settings.ctoken);
+
+			try
+			{
+				if (!mainTask.Wait(timeout, settings.ctoken))
+				{
+					//Signal to cancel
+					currentTokenSource.Cancel();
+					settings.standardInputEvent.Set();
+
+					//Now that we've cancelled, wait for the task to elegantly complete.
+					mainTask.Wait();
+
+					throw new TimeoutException();
+				}
+				else
+				{
+					settings.onSuccessWrapper();
+				}
+			}
+			catch (OperationCanceledException e)
+            {
+				UnityEngine.Debug.LogError(e.ToString());
+				settings.onFailWrapper(e);
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle((x) =>
+				{
+					if (x is TaskCanceledException)
+                    {
+						UnityEngine.Debug.LogError(x.ToString());
+						settings.onFailWrapper(x);
+						return true;
+					}
+					else
+                    {
+						UnityEngine.Debug.LogError("Unknown exception in Main Task: " + x.ToString());
+						settings.onFailWrapper(x);
+						return false;
+					}
+				});
+			}
+			catch (TimeoutException e)
+			{
+				UnityEngine.Debug.LogError(e.ToString());
+				settings.onFailWrapper(e);
+			}
+			catch (Exception e)
+			{
+				UnityEngine.Debug.LogError(e.ToString());
+				settings.onFailWrapper(e);
+			}
+			finally
+			{
+				currentTokenSource.Dispose();
+
+				// Set to null so that we don't try to Cancel OnApplicationQuit when there's nothing to cancel
+				currentTokenSource = null;
+			}
 		}
 
 		/// <summary>
 		/// Thread function to run external process.
 		/// </summary>
 		/// <param name="obj">Gets cast to Settings used to start up process, including sync'd callbacks and exitEvent</param>
-		void ExternalProcessTaskAction(Settings settings)
+		void ExternalProcessAction(Settings settings)
 		{
 			if (!settings.isValid) return;
 
-			if (settings.token.IsCancellationRequested)
+			if (settings.ctoken.IsCancellationRequested)
 			{
 				UnityEngine.Debug.Log("Task was cancelled before it got started.");
-				settings.token.ThrowIfCancellationRequested();
+				settings.ctoken.ThrowIfCancellationRequested();
 			}
+
+			lock(currentProcessLock)
+            {
+				currentProcess = -1;
+            }
 
 			ProcessStartInfo startInfo = new ProcessStartInfo(settings.process);
 
@@ -110,14 +252,15 @@ namespace JoshKery.York.AudioRecordingBooth
 			startInfo.UseShellExecute = string.IsNullOrEmpty(startInfo.FileName);
 			startInfo.RedirectStandardInput = true; //if UseShellExecute is true, then StandardInput won't work
 
+			// Do not create external process window
 			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			startInfo.CreateNoWindow = true;
 
 			Process process;
 
-			// These exitCodes will be passed to the main Unity thread via settings.callback
+			// These exitCodes will be passed to the main Unity thread via settings.onProcessFinishedWrapper
 			int[] exitCodes = new int[settings.commands.Length];
-			
+
 			// Run each command
 			for (int commandIndex = 0; commandIndex < settings.commands.Length; commandIndex++)
 			{
@@ -134,6 +277,15 @@ namespace JoshKery.York.AudioRecordingBooth
 
 						process.Start();
 
+						// Synchronously signal main Unity thread that we are starting the processes
+						if (commandIndex == 0)
+							settings.onFirstProcessStartedWrapper();
+
+						lock (currentProcessLock)
+                        {
+							currentProcess = commandIndex;
+                        }
+
 						if (settings.ShouldWaitForNextStandardInput(commandIndex, 0))
 						{
 							//StandardInput is used to pass commands to the Process, as you would be able to in a command line window
@@ -144,11 +296,10 @@ namespace JoshKery.York.AudioRecordingBooth
 								//The thread should wait until the autoResetEvent is signalled
 								settings.standardInputEvent.WaitOne();
 
-								if (settings.token.IsCancellationRequested)
+								if (settings.ctoken.IsCancellationRequested)
                                 {
 									process.Kill();
-									settings.token.ThrowIfCancellationRequested();
-									return;
+									settings.ctoken.ThrowIfCancellationRequested();
                                 }
 
 								//Then the exitCommand can be passed to this Process
@@ -159,35 +310,93 @@ namespace JoshKery.York.AudioRecordingBooth
 							streamWriter.Close();
 						}
 
-						//Wait for file to save
+						//Wait for any final process work e.g. for file to save
 						process.WaitForExit();
 						exitCodes[commandIndex] = process.ExitCode;
 					}
 
 				}
+				catch (OperationCanceledException e)
+                {
+					//Throw back up to Main Task
+					throw (e);
+                }
 				catch (Exception e)
 				{
-					//do nothing
+					UnityEngine.Debug.Log("Unknown exception in ExternalProcessAction Task: " + e.ToString());
+					//Throw back up to Main Task
+					throw (e);
 				}
 				finally
                 {
-					
-				}
+					lock(currentProcessLock)
+                    {
+						currentProcess = -1;
+                    }
+                }
 
 			}//end for loop
 
-			//Not sure why this check needs to be performed.
-			//I am expecting the return above to short-circuit(?) the rest of the Task
-			//and therefore for this code to never be reached
-			//and yet it is...
-			if (!settings.token.IsCancellationRequested)
-            {
-				//Finally invoke the sync'd callback to return the exit codes
-				if (settings.allFinishedCallbackWrapper != null)
-					settings.allFinishedCallbackWrapper.Invoke(exitCodes);
+			// Synchronously signal the main Unity thread that we are finished successfully with the processes
+			settings.onAllProcessFinishedWrapper(exitCodes);
+		}
+
+		/// <summary>
+		/// For overriding
+		/// </summary>
+		/// <param name="onFailWrapper"></param>
+		/// <param name="e"></param>
+		protected virtual void OnFail(Exception e)
+        {
+			onFail?.Invoke(e);
+        }
+
+		/// <summary>
+		/// For overriding
+		/// </summary>
+		/// <param name="onSuccessWrapper"></param>
+		protected virtual void OnSuccess()
+        {
+			onSuccess?.Invoke();
+        }
+
+		/// <summary>
+		/// For overriding
+		/// </summary>
+		/// <param name="onFirstProcessStartedWrapper"></param>
+		protected virtual void OnFirstProcessStarted()
+        {
+			onFirstProcessStarted?.Invoke();
+        }
+
+		/// <summary>
+		/// For overriding
+		/// </summary>
+		/// <param name="onAllProcessSuccessWrapper"></param>
+		/// <param name="exitCodes"></param>
+		protected virtual void OnAllProcessSuccess(int[] exitCodes)
+        {
+			onAllProcessSuccess?.Invoke(exitCodes);
+        }
+
+		public virtual void Init()
+		{
+			//If there's a recording to cancel, wait to invoke the callback
+			if (currentTokenSource != null)
+			{
+				onFail += InvokeInitOnFail;
+				CancelTask();
 			}
+			//Otherwise invoke it right away
+			else
+				onInit?.Invoke();
+		}
 
+		private void InvokeInitOnFail(Exception e)
+		{
+			onFail -= InvokeInitOnFail;
 
+			onInit?.Invoke();
 		}
 
 		/// <summary>
@@ -218,11 +427,17 @@ namespace JoshKery.York.AudioRecordingBooth
 			/// </summary>
 			public AutoResetEvent standardInputEvent;
 
-			public Action<int[]> allFinishedCallback;
+			public Action<Exception> onFailWrapper;
+			public Action onSuccessWrapper;
+			public Action onFirstProcessStartedWrapper;
+			public Action<int[]> onAllProcessFinishedWrapper;
 
-			public AllFinishedCallbackWrapper allFinishedCallbackWrapper;
+			/// <summary>
+			/// Cancellation token for ExternalProcessAction Task.
+			/// </summary>
+			public CancellationToken ctoken;
 
-			public CancellationToken token;
+			public int timeout = 60000;
 
 			/// <summary>
 			/// Checks that there is a process file to run and commands to issue to it.
@@ -259,56 +474,47 @@ namespace JoshKery.York.AudioRecordingBooth
 
 			public Settings(
 				string process,
-				string command,
-				Action<int[]> allFinishedCallback = null
+				string command
 			)
 			{
-				Set(process, new string[] { command }, allFinishedCallback);
+				Set(process, new string[] { command });
 			}
 
 			public Settings(
 				string process,
 				string command,
-				string standardInput = null,
-				Action<int[]> allFinishedCallback = null
+				string standardInput = null
 			)
 			{
-				Set(process, new string[] { command }, new string[][] { new string[] { standardInput } }, allFinishedCallback);
+				Set(process, new string[] { command }, new string[][] { new string[] { standardInput } });
 			}
 			public Settings(
 				string process,
 				string[] commands,
-				string[][] standardInput = null,
-				Action<int[]> allFinishedCallback = null
+				string[][] standardInput = null
 			)
 			{
-				Set(process, commands, standardInput, allFinishedCallback);
+				Set(process, commands, standardInput);
 			}
 
 			public void Set(
 				string process,
-				string[] commands,
-				Action<int[]> allFinishedCallback = null
+				string[] commands
 			)
 			{
 				this.process = process;
 				this.commands = commands;
-				this.allFinishedCallback = allFinishedCallback;
 			}
 
 			public void Set(
 				string process,
 				string[] commands,
-				string[][] standardInput = null,
-				Action<int[]> allFinishedCallback = null
+				string[][] standardInput = null
 			)
 			{
 				this.process = process;
-
 				this.commands = commands;
 				this.standardInput = standardInput;
-
-				this.allFinishedCallback = allFinishedCallback;
 			}
 		}
 

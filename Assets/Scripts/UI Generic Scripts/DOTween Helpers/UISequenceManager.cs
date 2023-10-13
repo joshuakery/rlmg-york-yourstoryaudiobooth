@@ -49,6 +49,20 @@ namespace JoshKery.GenericUI.DOTweenHelpers
             _CompleteCurrentSequence();
         }
 
+        private void _KillCurrentSequence()
+        {
+            if (currentSequence != null)
+            {
+                currentSequence.Kill();
+                currentSequence = null;
+            }
+        }
+
+        public void KillCurrentSequence()
+        {
+            _KillCurrentSequence();
+        }
+
         public void AppendInterval(float interval)
         {
             if (currentSequence == null)

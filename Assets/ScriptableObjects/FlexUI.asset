@@ -1,0 +1,202 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6266a579c7a8b4e0ca210e55fb20f068, type: 3}
+  m_Name: FlexUI
+  m_EditorClassIdentifier: 
+  primaryColor:
+    serializedVersion: 2
+    rgba: 4282004426
+  secondaryColor:
+    serializedVersion: 2
+    rgba: 4280295562
+  whiteColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  blackColor:
+    serializedVersion: 2
+    rgba: 4282462739
+  supportingNeutralColor:
+    serializedVersion: 2
+    rgba: 4293058779
+  accentColor:
+    serializedVersion: 2
+    rgba: 4289503304
+  contentColor1:
+    serializedVersion: 2
+    rgba: 4283124555
+  primaryTextGradient: {fileID: 0}
+  secondaryTextGradient: {fileID: 0}
+  primaryButtonSprite: {fileID: 0}
+  primaryButtonSpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  secondaryButtonSprite: {fileID: 0}
+  secondaryButtonSpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  checkmark: {fileID: 0}
+  toggleBackground: {fileID: 0}
+  primaryTypography:
+    title:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    subtitle:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h1:
+      size: 50
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h2:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h3:
+      size: 30
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h4:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    p:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    caption:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+  secondaryTypography:
+    title:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    subtitle:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h1:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h2:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h3:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    h4:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    p:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+    caption:
+      size: 36
+      font: {fileID: 0}
+      weight: 400
+      spacingOptions:
+        character: 0
+        word: 0
+        line: 0
+        paragraph: 0
+  panelBackground: {fileID: 0}
+  panelTiling: {fileID: 0}
+  panelBorder: {fileID: 0}
+  primaryLineGradient: {fileID: 0}
+  secondaryLineGradient: {fileID: 0}

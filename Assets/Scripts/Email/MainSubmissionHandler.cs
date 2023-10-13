@@ -27,6 +27,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public bool doSendData = false;
 
+        public bool doSubscribe = true;
+
         public string inputEmail;
 
         public string inputFirstName;
@@ -45,10 +47,10 @@ namespace JoshKery.York.AudioRecordingBooth
         private void OnEnable()
         {
             if (nameSubmissionHandler != null)
-                nameSubmissionHandler.onValidationSuccess += Submit;
+                nameSubmissionHandler.onValidationSuccess += OnNameValidationSucess;
 
             if (emailSubmissionHandler != null)
-                emailSubmissionHandler.onValidationSuccess += RememberEmail;
+                emailSubmissionHandler.onValidationSuccess += OnEmailValidationSucess;
 
             if (emailer != null)
             {
@@ -61,10 +63,10 @@ namespace JoshKery.York.AudioRecordingBooth
         private void OnDisable()
         {
             if (nameSubmissionHandler != null)
-                nameSubmissionHandler.onValidationSuccess -= Submit;
+                nameSubmissionHandler.onValidationSuccess -= OnNameValidationSucess;
 
             if (emailSubmissionHandler != null)
-                emailSubmissionHandler.onValidationSuccess -= RememberEmail;
+                emailSubmissionHandler.onValidationSuccess -= OnEmailValidationSucess;
 
             if (emailer != null)
             {
@@ -77,22 +79,33 @@ namespace JoshKery.York.AudioRecordingBooth
         /// 
         /// </summary>
         /// <param name="input">Assumed to be valid</param>
-        private void RememberEmail(string input)
+        private void OnEmailValidationSucess(string input)
         {
             inputEmail = input;
+
+            if (!doSaveData)
+                Submit();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="input">Assumed to be valid.</param>
-        private void Submit(string[] input)
+        /// <param name="input">Assumed to be valid</param>
+        private void OnNameValidationSucess(string[] input)
+        {
+            inputFirstName = input[0];
+            inputLastName = input[1];
+
+            Submit();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void Submit()
         {
             if (saverLogger == null) { return; }
             if (emailer == null) { return; }
-
-            inputFirstName = input[0];
-            inputLastName = input[1];
 
             //We must save the file here because it will need to be sent via email
             //We will delete it after email is sent successfully
@@ -122,7 +135,7 @@ namespace JoshKery.York.AudioRecordingBooth
             {
                 try
                 {
-                    saverLogger.LogFile(inputFirstName, inputLastName, inputEmail, Path.GetFileName(savedFilePath));
+                    saverLogger.LogFile(inputFirstName, inputLastName, inputEmail, Path.GetFileName(savedFilePath), doSubscribe);
                 }
                 catch (Exception e)
                 {
@@ -140,7 +153,9 @@ namespace JoshKery.York.AudioRecordingBooth
             // 
             if (doSendData)
             {
-                Emailer.EmailSettings settings = new Emailer.EmailSettings(inputEmail, inputFirstName, inputLastName, savedFilePath);
+                Emailer.EmailSettings settings = new Emailer.EmailSettings(
+                    inputEmail, inputFirstName, inputLastName, savedFilePath, doSubscribe
+                );
                 emailer.Run(settings);
             }
         }
@@ -209,6 +224,21 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (onEmailSubmissionError != null)
                 onEmailSubmissionError(message);
+        }
+
+        public void SetDoSaveData(bool value)
+        {
+            doSaveData = value;
+        }
+
+        public void SetDoSendData(bool value)
+        {
+            doSendData = value;
+        }
+
+        public void SetDoSubscribe(bool value)
+        {
+            doSubscribe = value;
         }
     }
 }

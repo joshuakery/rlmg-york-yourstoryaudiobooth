@@ -1,3 +1,5 @@
-FirstName, LastName, Email, FileName
-VVVV,,,C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Assets/StreamingAssets\recordings\V_story_100223_165202.mp3
-NNN,,,N_story_100223_165322.mp3
+FirstName, LastName, Email, FileName, Subscribe
+,,tttt@m.com,york_audio_story_101223_144050.mp3,False
+,,m@k.com,york_audio_story_101223_144832.mp3,False
+,,m@k.com,york_audio_story_101223_150958.mp3,False
+,,,york_audio_story_101323_114427.mp3,False

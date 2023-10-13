@@ -7,70 +7,96 @@ namespace JoshKery.York.AudioRecordingBooth
 {
     public class RecordButton : MonoBehaviour
     {
-        [SerializeField]
         private AudioRecorderProcess process;
 
         [SerializeField]
         private Button button;
 
+        [SerializeField]
+        private Image image;
+
+        [SerializeField]
+        private Sprite recordSprite;
+
+        [SerializeField]
+        private Sprite stopSprite;
+
+        private void Awake()
+        {
+            if (process == null)
+                process = FindObjectOfType<AudioRecorderProcess>();
+        }
+
         private void OnEnable()
         {
-            if (process != null)
-            {
-                process.onRecordingStarted.AddListener(OnRecordingStarted);
-                process.onRecordingFinished.AddListener(OnRecordingFinished);
-            }
-
             if (button != null)
             {
                 button.onClick.AddListener(OnClick);
+            }
+
+            if (process != null)
+            {
+                process.onStopRequested += OnStopRequested;
+                process.onFail += OnFail;
             }
         }
 
         private void OnDisable()
         {
-            if (process != null)
-            {
-                process.onRecordingStarted.RemoveListener(OnRecordingStarted);
-                process.onRecordingFinished.RemoveListener(OnRecordingFinished);
-            }
-
             if (button != null)
             {
                 button.onClick.RemoveListener(OnClick);
             }
+
+            if (process != null)
+            {
+                process.onStopRequested -= OnStopRequested;
+                process.onFail -= OnFail;
+            }
         }
 
-        private void Start()
+        private void OnFail(System.Exception e)
         {
-            
+            ToggleSprite(false);
+        }
+
+        private void OnStopRequested()
+        {
+            ToggleSprite(false);
         }
 
         private void OnClick()
         {
             if (process != null)
             {
-                if (!process.isRecording)
+                if (!process.isRunning)
                 {
                     Debug.Log("start");
+
+                    ToggleSprite(true);
+
                     process.OnStartRecording();
                 }
                 else
                 {
                     Debug.Log("stop");
+
+                    ToggleSprite(false);
+
                     process.OnStopRecording();
                 }
             }
         }
 
-        private void OnRecordingStarted()
+        private void ToggleSprite(bool startingRecording)
         {
-            
-        }
-
-        private void OnRecordingFinished()
-        {
-
+            if (image != null)
+            {
+                if (startingRecording == true)
+                    image.sprite = stopSprite;
+                else
+                    image.sprite = recordSprite;
+            }
         }
     }
 }

@@ -17,7 +17,24 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private AudioSource audioSource;
 
+        /// <summary>
+        /// When not isSeekable, the slider will jump to the audioSource.clip's position
+        /// isSeekable is set to true OnPointerDown,
+        /// thereby allowing this to set the audioSource.clip's position during OnDrag
+        /// </summary>
         private bool isSeekable;
+
+        public delegate void OnPlayEvent();
+        public OnPlayEvent onPlay;
+
+        public delegate void OnPauseEvent();
+        public OnPauseEvent onPause;
+
+        public delegate void OnPointerDownEvent();
+        public OnPointerDownEvent onPointerDownEvent;
+
+        public delegate void OnPointerUpEvent();
+        public OnPointerUpEvent onPointerUpEvent;
 
         protected override void Update()
         {
@@ -32,7 +49,7 @@ namespace JoshKery.York.AudioRecordingBooth
             ///Bug Workaround - don't let the clip act like it's playing beyond the audio length
             if (audioSource?.clip != null && audioSource.isPlaying && audioSource.time > audioSource.clip.length / 2f)
             {
-                audioSource.Pause();
+                PauseAudio();
                 audioSource.time = audioSource.clip.length / 2f;
             }
 
@@ -45,6 +62,8 @@ namespace JoshKery.York.AudioRecordingBooth
             isSeekable = true;
 
             SeekAudio(value);
+
+            onPointerDownEvent?.Invoke();
         }
 
         public override void OnPointerUp(PointerEventData eventData)
@@ -52,6 +71,8 @@ namespace JoshKery.York.AudioRecordingBooth
             base.OnPointerUp(eventData);
 
             isSeekable = false;
+
+            onPointerUpEvent?.Invoke();
         }
 
         public override void OnDrag(PointerEventData eventData)
@@ -68,12 +89,16 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (audioSource != null)
                 audioSource.Play();
+
+            onPlay?.Invoke();
         }
 
-        private void PauseAudio()
+        public void PauseAudio()
         {
             if (audioSource != null)
                 audioSource.Pause();
+
+            onPause?.Invoke();
         }
 
         /// <summary>
@@ -92,6 +117,14 @@ namespace JoshKery.York.AudioRecordingBooth
                     audioSource.time = (audioSource.clip.length / 2f) * newValue;
                 }
             }
+        }
+
+        public void Init()
+        {
+            PauseAudio();
+
+            if (audioSource != null)
+                audioSource.time = 0;
         }
 
         public void OnPlayPauseAudio()

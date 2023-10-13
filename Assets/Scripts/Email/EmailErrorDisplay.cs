@@ -10,20 +10,41 @@ namespace JoshKery.York.AudioRecordingBooth
     public class EmailErrorDisplay : BaseWindow
     {
         [SerializeField]
+        private KeyboardController emailKeyboard;
+
+        [SerializeField]
         private EmailSubmissionHandler emailSubmissionHandler;
+
+        private MainSubmissionHandler mainSubmissionHandler;
 
         [SerializeField]
         private TMP_Text messageField;
 
+        protected override void Awake()
+        {
+            base.Awake();
+
+            mainSubmissionHandler = FindObjectOfType<MainSubmissionHandler>();
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
+
+            if (emailKeyboard != null)
+                emailKeyboard.onInit += Close;
 
             if (emailSubmissionHandler != null)
             {
                 emailSubmissionHandler.onValidationError += OnValidationError;
                 emailSubmissionHandler.onSubmissionError += OnSubmissionError;
                 emailSubmissionHandler.onSubmissionSuccess += DismissError;
+            }
+
+            if (mainSubmissionHandler != null)
+            {
+                mainSubmissionHandler.onEmailSubmissionError += OnSubmissionError;
+                mainSubmissionHandler.onSubmissionSuccess += DismissError;
             }
                 
         }
@@ -32,13 +53,22 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             base.OnDisable();
 
+            if (emailKeyboard != null)
+                emailKeyboard.onInit -= Close;
+
             if (emailSubmissionHandler != null)
             {
                 emailSubmissionHandler.onValidationError -= OnValidationError;
                 emailSubmissionHandler.onSubmissionError -= OnSubmissionError;
                 emailSubmissionHandler.onSubmissionSuccess -= DismissError;
             }
-                
+
+            if (mainSubmissionHandler != null)
+            {
+                mainSubmissionHandler.onEmailSubmissionError -= OnSubmissionError;
+                mainSubmissionHandler.onSubmissionSuccess -= DismissError;
+            }
+
         }
 
         private void OnValidationError(int inputField, string message)

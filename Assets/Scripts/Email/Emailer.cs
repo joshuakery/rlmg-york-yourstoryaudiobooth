@@ -18,15 +18,18 @@ namespace JoshKery.York.AudioRecordingBooth
 
             public string attachmentPath;
 
+            public bool doSubscribe;
+
             public Action<string> onFailWrapper;
             public Action onSuccessWrapper;
             
-            public EmailSettings(string a, string f, string l, string p)
+            public EmailSettings(string a, string f, string l, string p, bool sub)
             {
                 address = a;
                 firstName = f;
                 lastName = l;
                 attachmentPath = p;
+                doSubscribe = sub;
             }
         }
 
@@ -80,8 +83,9 @@ namespace JoshKery.York.AudioRecordingBooth
         }
 
         /// <summary>
-        /// Runs Main email task.
-        /// Sets up synchronization context for callback events
+        /// Runs Main email Task.
+        /// Sets up cancellation token.
+        /// Sets up synchronization context for callback events.
         /// </summary>
         /// <param name="settings"></param>
         public void Run(EmailSettings settings)
@@ -90,30 +94,29 @@ namespace JoshKery.York.AudioRecordingBooth
             settings.onFailWrapper = new Action<string>(message => syncContext.Post(_ => onFail(message), null));
             settings.onSuccessWrapper = new Action(() => syncContext.Post(_ => onSuccess(), null));
 
-            Task.Run(() => Main(settings));
+            currentTokenSource = new CancellationTokenSource();
+
+            currentTask = Task.Run( () => Main(settings, currentTokenSource.Token), currentTokenSource.Token );
         }
 
         /// <summary>
         /// Main email task.
-        /// Sets up cancellation token.
         /// Wraps around core Action and handles exceptions and success.
         /// </summary>
         /// <param name="settings"></param>
-        private void Main(EmailSettings settings)
+        private void Main(EmailSettings settings, CancellationToken ctoken)
         {
-            currentTokenSource = new CancellationTokenSource();
-
-            currentTask = Task.Run(() => SendEmail(settings, currentTokenSource.Token), currentTokenSource.Token);
+            Task mainTask = Task.Run(() => SendEmail(settings, ctoken), ctoken);
 
             try
             {
-                if (!currentTask.Wait(EMAILTIMEOUT))
+                if (!mainTask.Wait(EMAILTIMEOUT, ctoken))
                 {
                     //Signal to cancel
                     currentTokenSource.Cancel();
 
                     //Now that we've cancelled, wait for the task to elegantly complete.
-                    currentTask.Wait();
+                    mainTask.Wait();
 
                     throw new TimeoutException();
                 }
@@ -121,6 +124,11 @@ namespace JoshKery.York.AudioRecordingBooth
                 {
                     settings.onSuccessWrapper();
                 }
+            }
+            catch (OperationCanceledException e)
+            {
+                Debug.LogError(e.ToString());
+                settings.onFailWrapper("Email cancelled.");
             }
             catch (AggregateException e)
             {
@@ -131,7 +139,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 }
                 else
                 {
-                    settings.onFailWrapper(e.ToString());
+                    settings.onFailWrapper("An unknown error occurred while sending the email.");
                 }
             }
             catch (TimeoutException e)
@@ -142,7 +150,7 @@ namespace JoshKery.York.AudioRecordingBooth
             catch (Exception e)
             {
                 Debug.LogError(e);
-                settings.onFailWrapper(e.ToString());
+                settings.onFailWrapper("An unknown error occurred while sending the email.");
             }
             finally
             {
@@ -165,7 +173,7 @@ namespace JoshKery.York.AudioRecordingBooth
             }
 
             // todo replace with actual email sending
-            for (int i=0; i<10; i++)
+            for (int i=0; i<2; i++)
             {
                 if (token.IsCancellationRequested)
                 {
@@ -175,6 +183,8 @@ namespace JoshKery.York.AudioRecordingBooth
                 
                 Thread.Sleep(500);
             }
+
+            //throw new Exception();
 
             Debug.Log("Email completed.");
         }

@@ -1,0 +1,12 @@
+{
+	"attractTimeout" : 240,
+	"attractFile" : "AudioBoothAttract.mp4",
+	"apiServer" : "server_path",
+	"apiKey" : "key",
+	"apiEndpoint" : "endpoint",
+    "sampleStoryFile1": "sample_story1.mp3",
+    "sampleStoryFile2": "sample_story2.mp3",
+    "microphoneName": "Microphone Array (AMD Audio Device)",
+    "recordingDuration": 45,
+    "checkForMicrophoneInterval": 30
+}

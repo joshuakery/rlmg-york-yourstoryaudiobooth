@@ -62,10 +62,12 @@ public class EmailValidator : MonoBehaviour
         }
         catch (RegexMatchTimeoutException e)
         {
+            Debug.Log(e);
             return ValidationResponse.Timeout;
         }
         catch (ArgumentException e)
         {
+            Debug.Log(e);
             return ValidationResponse.Unknown;
         }
 

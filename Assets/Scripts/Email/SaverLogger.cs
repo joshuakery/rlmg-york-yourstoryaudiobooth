@@ -15,7 +15,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public string LOGFILENAME = "all_user_info";
 
-        public string LOGHEADERLINE = "FirstName, LastName, Email, FileName";
+        public string LOGHEADERLINE = "FirstName, LastName, Email, FileName, Subscribe";
 
         protected string logFilePath;
         protected string delimiter = ",";
@@ -76,9 +76,9 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
-        public void LogFile(string firstName, string lastName, string email, string fileName)
+        public void LogFile(string firstName, string lastName, string email, string fileName, bool doSubscribe)
         {
-            string line = string.Join(delimiter, firstName, lastName, email, fileName);
+            string line = string.Join(delimiter, firstName, lastName, email, fileName, doSubscribe.ToString());
 
             WriteLine(line);
         }

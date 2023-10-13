@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Threading.Tasks;
+using System;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -29,8 +30,6 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private string DOTRIMTEMPLATE = "-ss {0} -t {1} -y -i \"{2}\" -acodec copy \"{3}\" ";
 
-        private Task currentTask;
-
         public bool IsTrimming
         {
             get
@@ -39,38 +38,14 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
+        public delegate void TrimSuccessEvent();
+        public TrimSuccessEvent onTrimSuccess;
 
-        #region Public UnityEvents
-        private UnityEvent _OnTrimStarted;
-        /// <summary>
-        /// Invoked AFTER private RecordingStarted callback is invoked
-        /// </summary>
-        public UnityEvent OnTrimStarted
-        {
-            get
-            {
-                if (_OnTrimStarted == null)
-                    _OnTrimStarted = new UnityEvent();
+        public delegate void TrimErrorEvent();
+        public TrimErrorEvent onTrimError;
+        
 
-                return _OnTrimStarted;
-            }
-        }
 
-        private UnityEvent _OnTrimFinished;
-        /// <summary>
-        /// Invoked AFTER private RecordingAllFinished callback is invoked
-        /// </summary>
-        public UnityEvent OnTrimFinished
-        {
-            get
-            {
-                if (_OnTrimFinished == null)
-                    _OnTrimFinished = new UnityEvent();
-
-                return _OnTrimFinished;
-            }
-        }
-        #endregion
 
         void Start()
         {
@@ -90,16 +65,29 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (currentTask == null || currentTask.IsCompleted)
             {
-                currentTask = Run(
+                Run(
                     new Settings(
                         FFMPEG,
-                        string.Format(DOTRIMTEMPLATE, startTime, duration, fileIn, fileOut),
-                        TrimAllFinished
+                        string.Format(DOTRIMTEMPLATE, startTime, duration, fileIn, fileOut)
                     )
                 );
             }
+        }
 
-            OnTrimStarted.Invoke();
+        protected override void OnAllProcessSuccess(int[] exitCodes)
+        {
+            UnityEngine.Debug.Log("all finished trim");
+            foreach (int exitCode in exitCodes)
+            {
+                UnityEngine.Debug.Log(exitCode);
+            }
+
+            base.OnAllProcessSuccess(exitCodes);
+
+            if (exitCodes[0] == 0)
+                onTrimSuccess?.Invoke();
+            else
+                onTrimError?.Invoke();
         }
 
         /// <summary>
@@ -111,21 +99,6 @@ namespace JoshKery.York.AudioRecordingBooth
         }
 
 
-
-        /// <summary>
-        /// Callback invoked after all processes in the StartRecording command strings are complete.
-        /// </summary>
-        /// <param name="exitCodes"></param>
-        private void TrimAllFinished(int[] exitCodes)
-        {
-            UnityEngine.Debug.Log("all finished trim");
-            foreach (int exitCode in exitCodes)
-            {
-                UnityEngine.Debug.Log(exitCode);
-            }
-
-            OnTrimFinished.Invoke();
-        }
     }
 }
 

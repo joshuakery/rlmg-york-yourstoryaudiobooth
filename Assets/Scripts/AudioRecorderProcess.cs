@@ -6,14 +6,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using System;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
+    /// <summary>
+    /// Parameters for ffmpeg process to use microphone and record
+    /// Along with parameters for a stopwatch timeout (and backup timeout)
+    /// </summary>
 	public class AudioRecorderProcess : ExternalProcess
 	{
+        public string MicrophoneName = "Microphone Array (AMD Audio Device)";
+
+        /// <summary>
+        /// Filename for saving recording audio file
+        /// </summary>
         [SerializeField]
         private string OUTFILENAME = "out.mp3";
 
+        /// <summary>
+        /// Save path for recording audio file
+        /// </summary>
         private string outFilePath;
 
         /// <summary>
@@ -31,55 +44,94 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private string STOPRECORDINGTEMPLATE = "q";
 
-        private Task currentTask;
+        /// <summary>
+        /// Backup timeout enforced on the Main Task thread, should this MonoBehaviour be Destroyed.
+        /// Milliseconds.
+        /// </summary>
+        private int ProcessTimeout
+        {
+            get
+            {
+                return RecordingDuration + 5000;
+            }
+        }
 
+        /// <summary>
+        /// Time from which stopwatch counts
+        /// </summary>
+        public DateTime? StartTime = null;
+
+        /// <summary>
+        /// True if the current process is the first process
+        /// </summary>
         public bool isRecording
         {
             get
             {
-                return currentTask != null && !currentTask.IsCompleted;
+                // The recording process should be the first and only command in the ExternalProcessAction Task
+                return currentProcess == 0;
             }
         }
+
+        /// <summary>
+        /// Because the process and Task do not necessarily end as soon as the Unity main thread asks them to
+        /// </summary>
+        public delegate void StopRequestedEvent();
+
+        /// <summary>
+        /// Subscribe to this to listen to when the stop is requested on the Unity main thread
+        /// </summary>
+        public StopRequestedEvent onStopRequested;
+
+        public delegate void RecordingSuccessEvent();
+
+        public RecordingSuccessEvent onRecordingSuccess;
+
+        public delegate void RecordingErrorEvent();
+
+        public RecordingErrorEvent onRecordingError;
+
+        /// <summary>
+        /// Was the StopRecording method called?
+        /// Reset to false with process onSuccess and onFail methods
+        /// </summary>
+        public bool wasStopRequested = false;
+
+        /// <summary>
+        /// Milliseconds.
+        /// </summary>
+        public int RecordingDuration = 45000;
+
+        private void OnEnable()
+        {
             
-
-        #region Public UnityEvents
-        private UnityEvent _onRecordingStarted;
-        /// <summary>
-        /// Invoked AFTER private RecordingStarted callback is invoked
-        /// </summary>
-        public UnityEvent onRecordingStarted
-        {
-            get
-            {
-                if (_onRecordingStarted == null)
-                    _onRecordingStarted = new UnityEvent();
-
-                return _onRecordingStarted;
-            }
         }
 
-        private UnityEvent _onRecordingFinished;
         /// <summary>
-        /// Invoked AFTER private RecordingAllFinished callback is invoked
+        /// Setup process parameters
         /// </summary>
-        public UnityEvent onRecordingFinished
-        {
-            get
-            {
-                if (_onRecordingFinished == null)
-                    _onRecordingFinished = new UnityEvent();
-
-                return _onRecordingFinished;
-            }
-        }
-        #endregion
-
         void Start()
 		{
 			defaultProcessFileName = FFMPEG;
 
             outFilePath = Path.Combine(Application.streamingAssetsPath, OUTFILENAME);
 		}
+
+        /// <summary>
+        /// Check if stopwatch has passed RecordingDuration and StopRecording if so
+        /// </summary>
+        private void Update()
+        {
+            if (isRecording && StartTime != null)
+            {
+                TimeSpan duration = (TimeSpan)(DateTime.Now - StartTime);
+
+                if (duration.TotalMilliseconds > RecordingDuration && !wasStopRequested)
+                {
+                    StopRecording();
+                }
+            }
+        }
 
         /// <summary>
         /// Format the parameters into the STARTRECORDINGTEMPLATE
@@ -91,15 +143,81 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (currentTask == null || currentTask.IsCompleted)
             {
-                currentTask = Run(
+                // Reset so the standardInput commands are not immediately input
+                standardInputEvent.Reset();
+
+                // Send the settings and timeout over to be run
+                Run(
                     new Settings(
                         FFMPEG,
                         string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut),
-                        STOPRECORDINGTEMPLATE,
-                        RecordingAllFinished
-                    )
+                        STOPRECORDINGTEMPLATE
+                    ),
+                    ProcessTimeout
                 );
             }
+        }
+
+        /// <summary>
+        /// Set the timer StartTime and invoke callback
+        /// </summary>
+        /// <param name="onFirstProcessStartedWrapper"></param>
+        protected override void OnFirstProcessStarted()
+        {
+            StartTime = DateTime.Now;
+
+            base.OnFirstProcessStarted();
+        }
+
+        /// <summary>
+        /// Handle success and invoke callback
+        /// </summary>
+        /// <param name="onAllProcessFinishedWrapper"></param>
+        /// <param name="exitCodes"></param>
+        protected override void OnAllProcessSuccess(int[] exitCodes)
+        {
+            Debug.Log("Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds);
+
+            foreach (int exitCode in exitCodes)
+            {
+                UnityEngine.Debug.Log("Exit code: " + exitCode);
+            }
+
+            base.OnAllProcessSuccess(exitCodes);
+
+            //The first exit code should be 0 for a successful recording
+            //A code like -22 means an error occurred
+            if (exitCodes[0] == 0)
+                onRecordingSuccess?.Invoke();
+            else
+                onRecordingError?.Invoke();
+        }
+
+        /// <summary>
+        /// Reset wasStopRequested and invoke callback
+        /// </summary>
+        /// <param name="onSuccessWrapper"></param>
+        protected override void OnSuccess()
+        {
+            wasStopRequested = false;
+
+            StartTime = null;
+
+            base.OnSuccess();
+        }
+
+        /// <summary>
+        /// Reset wasStopRequested and invoke callback
+        /// </summary>
+        /// <param name="onFailWrapper"></param>
+        /// <param name="e"></param>
+        protected override void OnFail(Exception e)
+        {
+            wasStopRequested = false;
+
+            StartTime = null;
+
+            base.OnFail(e);
         }
 
         /// <summary>
@@ -108,7 +226,13 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private void StopRecording()
         {
+            Debug.Log("stop recording");
+
             standardInputEvent.Set();
+
+            wasStopRequested = true;
+
+            onStopRequested?.Invoke();
         }
 
         /// <summary>
@@ -116,7 +240,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		public void OnStartRecording()
         {
-			StartRecording("Microphone Array (AMD Audio Device)", outFilePath);
+			StartRecording(MicrophoneName, outFilePath);
         }
 
         /// <summary>
@@ -129,20 +253,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
         
 
-        /// <summary>
-        /// Callback invoked after all processes in the StartRecording command strings are complete.
-        /// </summary>
-        /// <param name="exitCodes"></param>
-        private void RecordingAllFinished(int[] exitCodes)
-        {
-            UnityEngine.Debug.Log("all finished");
-            foreach (int exitCode in exitCodes)
-            {
-                UnityEngine.Debug.Log(exitCode);
-            }
-
-            onRecordingFinished.Invoke();
-        }
+        
 	}
 
 }

@@ -10,6 +10,10 @@ namespace JoshKery.York.AudioRecordingBooth
 {
     public class AudioClipLoader : MonoBehaviour
     {
+        public bool doLoadOnStart = true;
+
+        public string clipFileName = "out.mp3";
+
         public AudioClip CurrentClip;
 
         [SerializeField]
@@ -34,7 +38,13 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private async void Start()
         {
-            var path = Path.Combine(Application.streamingAssetsPath, "out.mp3");
+            if (doLoadOnStart)
+                await Reload();
+        }
+
+        public async Task Reload()
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, clipFileName);
 
             CurrentClip = await LoadClip(path);
 
@@ -50,7 +60,6 @@ namespace JoshKery.York.AudioRecordingBooth
             }
 
             ClipLoaded.Invoke();
-
         }
 
         private async Task<AudioClip> LoadClip(string path)
@@ -78,6 +87,14 @@ namespace JoshKery.York.AudioRecordingBooth
             }
 
             return clip;
+        }
+
+        public IEnumerator ReloadCo(string fileName = null)
+        {
+            if (!string.IsNullOrEmpty(fileName))
+                clipFileName = fileName;
+
+            yield return Reload();
         }
     }
 }

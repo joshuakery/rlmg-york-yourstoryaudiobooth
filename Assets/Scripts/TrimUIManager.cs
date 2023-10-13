@@ -29,6 +29,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void OnClipLoaded()
         {
+            Debug.Log("clip loaded");
             if (audioClipLoader != null)
             {
                 if (minMaxSlider != null)
