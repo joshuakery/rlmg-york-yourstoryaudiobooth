@@ -46,7 +46,17 @@ namespace JoshKery.York.AudioRecordingBooth
             id = question.id;
 
             if (textDisplay != null)
-                textDisplay.text = question.text;
+                textDisplay.text = AddNoBreakTagsToLastTwoWords(question.text);
+        }
+
+        private string AddNoBreakTagsToLastTwoWords(string text)
+        {
+            string[] words = text.Split();
+
+            string partOneWords = System.String.Join(" ", words.SubArray(0, words.Length - 2));
+            string partTwoWords = "<nobr>" + string.Join(" ", words.SubArray(words.Length - 2, 2)) + "</nobr>";
+
+            return partOneWords + " " + partTwoWords;
         }
     }
 }

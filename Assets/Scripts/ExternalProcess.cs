@@ -27,13 +27,72 @@ namespace JoshKery.York.AudioRecordingBooth
 		/// </summary>
 		private const int DEFAULTTIMEOUT = 60000;
 
+        #region Process File and Path Properties
+        /// <summary>
+        /// Default executable file to use in the process if none is specified
+        /// </summary>
+        public string defaultProcessFileName;
 
 		/// <summary>
-		/// Default executable file to use in the process if none is specified
+		/// Location where process file (e.g. ffmpeg) can be found.
 		/// </summary>
-		public string defaultProcessFileName;
+		public enum ProcessFileLocation
+		{
+			StreamingAssets,
+			Desktop,
+			Application
+		}
 
-		public delegate void OnFailEvent(Exception e);
+		/// <summary>
+		/// Determines where local content file (e.g. json) and mediaCache folder will be saved.
+		/// </summary>
+		[SerializeField]
+		private ProcessFileLocation processFileLocation = ProcessFileLocation.StreamingAssets;
+
+		/// <summary>
+		/// Path to directory where process file (e.g. ffmpeg) can be found.
+		/// Based on processFileLocation. Either StreamingAssets, Desktop, or Application folders.
+		/// </summary>
+		protected string ProcessFileDirectory
+		{
+			get
+			{
+				string path = "";
+
+				switch (processFileLocation)
+				{
+					case ProcessFileLocation.Application:
+						path = Path.Combine(Application.dataPath, "..");
+						break;
+					case ProcessFileLocation.StreamingAssets:
+						path = Application.streamingAssetsPath;
+						break;
+					case ProcessFileLocation.Desktop:
+						path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+						break;
+				}
+
+				if (!Directory.Exists(path))
+					Directory.CreateDirectory(path);
+
+				return path;
+			}
+		}
+
+		/// <summary>
+		/// Path to defaultProcessFile
+		/// </summary>
+		protected string ProcessFilePath
+		{
+			get
+			{
+				return Path.Combine(ProcessFileDirectory, defaultProcessFileName);
+			}
+		}
+        #endregion
+
+        #region Events
+        public delegate void OnFailEvent(Exception e);
 
 		/// <summary>
 		/// Event invoked when an exception is thrown during the Main Task.
@@ -65,8 +124,16 @@ namespace JoshKery.York.AudioRecordingBooth
 		/// </summary>
 		public OnAllProcessSuccessEvent onAllProcessSuccess;
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public delegate void InitEvent();
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public InitEvent onInit;
+		#endregion
 
 		/// <summary>
 		/// When signalled, process will continue, issue its exit command, and WaitForExit.
@@ -129,7 +196,7 @@ namespace JoshKery.York.AudioRecordingBooth
 		public void Run(Settings settings, int timeout = DEFAULTTIMEOUT)
 		{
 			if (settings == null) return;
-			if (string.IsNullOrEmpty(settings.process)) settings.process = defaultProcessFileName;
+			if (string.IsNullOrEmpty(settings.process)) settings.process = ProcessFilePath;
 			if (!settings.isValid) return;
 
 			// Setup SynchronizationContext for use in calling callbacks on main Unity thread

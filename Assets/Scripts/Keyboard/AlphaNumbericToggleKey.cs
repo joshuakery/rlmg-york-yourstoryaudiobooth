@@ -25,12 +25,14 @@ namespace rlmg.utils
 
         public override void OnPointerDown(PointerEventData eventdata)
         {
-            bg.GetComponent<Image>().color = color_bg;
+            bg.GetComponent<Image>().color = color_symbol;
+            key_symbol.GetComponent<TMP_Text>().color = color_bg;
         }
 
         public override void OnPointerUp(PointerEventData eventdata)
         {
-            bg.GetComponent<Image>().color = color_symbol;
+            bg.GetComponent<Image>().color = color_bg;
+            key_symbol.GetComponent<TMP_Text>().color = color_symbol;
 
             if (!isAlpha)
             {

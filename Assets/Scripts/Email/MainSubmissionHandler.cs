@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.IO;
 using UnityEngine;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -119,7 +120,11 @@ namespace JoshKery.York.AudioRecordingBooth
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e.ToString());
+                    RLMGLogger.Instance.Log(
+                        e.ToString(),
+                        MESSAGETYPE.ERROR
+                    );
+
                     OnNameSubmissionError(e.ToString());
                     savedFilePath = null;
                 }
@@ -139,7 +144,11 @@ namespace JoshKery.York.AudioRecordingBooth
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e.ToString());
+                    RLMGLogger.Instance.Log(
+                         e.ToString(),
+                         MESSAGETYPE.ERROR
+                     );
+
                     OnNameSubmissionError(e.ToString());
                 }
                 finally
@@ -216,7 +225,10 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public void OnEmailSubmissionError(string message)
         {
-            Debug.LogError(message);
+            RLMGLogger.Instance.Log(
+                message,
+                MESSAGETYPE.ERROR
+            );
 
             //the page manager needs to listen here
             //and return us to the email keyboard

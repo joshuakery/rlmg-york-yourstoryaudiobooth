@@ -46,7 +46,7 @@ namespace JoshKery.York.AudioRecordingBooth
                     TimeSpan timeSpan = TimeSpan.FromSeconds(time);
 
                     textDisplay.text = string.Format(
-                        "<mspace=0.55em>{0}</mspace>:<mspace=0.55em>{1}</mspace>",
+                        "<mspace=0.75em>{0}</mspace>:<mspace=0.75em>{1}</mspace>",
                         timeSpan.ToString("mm"),
                         timeSpan.ToString("ss")
                     );

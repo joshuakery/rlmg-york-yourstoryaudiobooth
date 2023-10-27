@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 using JoshKery.GenericUI.DOTweenHelpers;
 
 namespace JoshKery.York.AudioRecordingBooth
@@ -14,7 +15,10 @@ namespace JoshKery.York.AudioRecordingBooth
         private BaseWindow playbackHandle;
 
         [SerializeField]
-        private BaseWindow trimSlider;
+        private BaseWindow trimSliderWindow;
+
+        [SerializeField]
+        private MinMaxSlider trimSlider;
 
         public bool isPlayback = true;
 
@@ -27,7 +31,19 @@ namespace JoshKery.York.AudioRecordingBooth
         public void Switch(bool toPlayback)
         {
             if (playbackManager != null)
-                playbackManager.PauseAudio();
+            {
+                if (trimSlider != null)
+                {
+                    playbackManager.minValue = trimSlider.Values.minValue;
+                    playbackManager.maxValue = trimSlider.Values.maxValue;
+                }
+
+                if (toPlayback) //Pause AND start start to min
+                    playbackManager.Init();
+                else //Only pause here so we don't jump the slider around
+                    playbackManager.PauseAudio();
+
+            }
 
             //just hide the handles
             SwitchHandles(toPlayback);
@@ -36,12 +52,12 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void SwitchHandles(bool toPlayback)
         {
-            if (playbackHandle != null && trimSlider != null)
+            if (playbackHandle != null && trimSliderWindow != null)
             {
                 if (!toPlayback)
                 {
                     playbackHandle.Close();
-                    trimSlider.Open();
+                    trimSliderWindow.Open();
 
                     isPlayback = false;
 
@@ -50,7 +66,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 else
                 {
                     playbackHandle.Open();
-                    trimSlider.Close();
+                    trimSliderWindow.Close();
 
                     isPlayback = true;
 

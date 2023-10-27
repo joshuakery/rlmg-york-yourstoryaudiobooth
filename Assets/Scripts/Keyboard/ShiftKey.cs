@@ -49,7 +49,8 @@ namespace rlmg.utils
             if (interactable)
             {
                 //the background responds to the down state
-                bg.GetComponent<Image>().color = color_bg;
+                bg.GetComponent<Image>().color = color_symbol;
+                key_symbol.GetComponent<TMP_Text>().color = color_bg;
 
                 ShiftKeyToggleGraphics(!isCaps);
             }
@@ -60,7 +61,8 @@ namespace rlmg.utils
             if (interactable)
             {
                 //the background reverts...
-                bg.GetComponent<Image>().color = color_symbol;
+                bg.GetComponent<Image>().color = color_bg;
+                key_symbol.GetComponent<TMP_Text>().color = color_symbol;
 
                 if (!isCaps)
                 {
@@ -97,18 +99,19 @@ namespace rlmg.utils
 
         private void ShiftKeyToggleGraphics(bool _toggle)
         {
-            //if true Caps is on
-            if(_toggle)
-            {
+            if (key_symbol != null && key_symbol_filled != null)
+                //if true Caps is on
+                if(_toggle)
+                {
                 
-                key_symbol.GetComponent<Image>().enabled = false;
-                key_symbol_filled.GetComponent<Image>().enabled = true;
-            } else
-            {
+                    key_symbol.GetComponent<Image>().enabled = false;
+                    key_symbol_filled.GetComponent<Image>().enabled = true;
+                } else
+                {
                 
-                key_symbol_filled.GetComponent<Image>().enabled = false;
-                key_symbol.GetComponent<Image>().enabled = true;
-            }
+                    key_symbol_filled.GetComponent<Image>().enabled = false;
+                    key_symbol.GetComponent<Image>().enabled = true;
+                }
         }
     }
 }

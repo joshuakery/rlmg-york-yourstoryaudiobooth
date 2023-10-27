@@ -107,7 +107,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (deviceMonitor != null)
             {
-                deviceMonitor.MicrohponeName = configData.microphoneName;
+                deviceMonitor.MicrophoneName = configData.microphoneName;
                 deviceMonitor.Timeout = configData.checkForMicrophoneInterval * 1000;
             }
                 

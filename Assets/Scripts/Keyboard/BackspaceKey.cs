@@ -25,7 +25,7 @@ namespace rlmg.utils
         public override void OnPointerUp(PointerEventData eventdata)
         {
             bg.GetComponent<Image>().color = color_bg;
-            key_symbol.GetComponent<Image>().color = color_bg;
+            key_symbol.GetComponent<Image>().color = color_symbol;
             KeyboardKeyDown(key_ids[0]);
         }
     }

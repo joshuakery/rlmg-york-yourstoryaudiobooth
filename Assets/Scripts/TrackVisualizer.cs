@@ -83,6 +83,7 @@ namespace JoshKery.York.AudioRecordingBooth
             samplesize /= 2;
             samples = samples.Take(samples.Length / 2).ToArray();
 
+
             // Fill waveform array for each line we'll draw
             int packsize = (samplesize / width);
             for (int x = 0; x < waveform.Length; x++)
@@ -97,7 +98,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
             // Map the sound data to texture
             // 1 - Clear
-            Color[] pixels = Enumerable.Repeat(background, Screen.width * Screen.height).ToArray();
+            Color[] pixels = Enumerable.Repeat(background, width * height).ToArray();
             tex.SetPixels(pixels);
 
 

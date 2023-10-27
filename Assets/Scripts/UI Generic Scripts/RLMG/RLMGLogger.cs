@@ -27,10 +27,11 @@ namespace rlmg.logging
 	public class RLMGLogger : Singleton<RLMGLogger>
 	{
 		[SerializeField]
-		protected string logFolderName = "RLMGLogs";
+		protected string logFolderName = "ExhibitLogs";
 
 		[SerializeField]
-		protected string logFileName = "rlmg_log";
+		protected string logFileName = "exhibit_log";
+		//todo get exhibit name from like Unity project meta data... wherever the executable file name is defined
 
 		[SerializeField]
 		private string headerLine = "Timestamp, Message";
@@ -94,7 +95,7 @@ namespace rlmg.logging
 				}
 			}
 
-			logFileName = logFileName + "_" + Now.Month + "-" + Now.Day + "-" + Now.Year;
+			logFileName = logFileName + "_" + Now.Year + "-" + Now.Month + "-" + Now.Day;
 
 			if(logFilePerSession)
 			{

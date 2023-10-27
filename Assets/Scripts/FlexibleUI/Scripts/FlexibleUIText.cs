@@ -105,6 +105,8 @@ public class FlexibleUIText : FlexibleUIBase
 
     protected override void OnSkinUI()
     {
+        if (skinData == null) { return; }
+
         switch(screenType)
         {
             case ScreenType.PrimaryTouchscreen:

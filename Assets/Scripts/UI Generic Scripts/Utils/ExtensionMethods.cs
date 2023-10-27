@@ -138,4 +138,11 @@ public static class ExtensionMethods
         }
     }
 
+    public static T[] SubArray<T>(this T[] array, int offset, int length)
+    {
+        T[] result = new T[length];
+        System.Array.Copy(array, offset, result, 0, length);
+        return result;
+    }
+
 }

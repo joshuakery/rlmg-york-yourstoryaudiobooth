@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 using JoshKery.GenericUI.DOTweenHelpers;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -13,7 +14,7 @@ namespace JoshKery.York.AudioRecordingBooth
     /// </summary>
     public class DeviceMonitor : BaseWindow
     {
-        public string MicrohponeName = "Microphone Array (AMD Audio Device)";
+        public string MicrophoneName = "Microphone Array (AMD Audio Device)";
 
         public int Timeout = 2000;
 
@@ -38,15 +39,38 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void ScanForMicrophone()
         {
-            if (!Microphone.devices.Contains(MicrohponeName))
+            if (!Microphone.devices.Contains(MicrophoneName))
             {
                 if (!isOpen)
-                    Open();
+                {
+                    Open(SequenceType.UnSequenced);
+
+                    RLMGLogger.Instance.Log(
+                        string.Format(
+                            "Requested microphone not found: {0}\nAvailable audio input devices:\n{1}",
+                            MicrophoneName,
+                            string.Join("\n - ", Microphone.devices)
+                        ),
+                        MESSAGETYPE.ERROR
+                    );
+                }
+                    
             }
             else
             {
                 if (isOpen)
-                    Close();
+                {
+                    Close(SequenceType.UnSequenced);
+
+                    RLMGLogger.Instance.Log(
+                        string.Format(
+                            "Requested microphone successively detected: {0}",
+                            MicrophoneName
+                        ),
+                        MESSAGETYPE.INFO
+                    );
+                }
+                    
             }
         }
     }

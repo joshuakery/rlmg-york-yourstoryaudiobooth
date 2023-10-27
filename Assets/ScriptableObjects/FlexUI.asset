@@ -70,12 +70,12 @@ MonoBehaviour:
         paragraph: 0
     h1:
       size: 50
-      font: {fileID: 0}
+      font: {fileID: 11400000, guid: 0147c02b80213914db19ea206083650c, type: 2}
       weight: 400
       spacingOptions:
-        character: 0
+        character: 1.5
         word: 0
-        line: 0
+        line: 17.5
         paragraph: 0
     h2:
       size: 36
@@ -88,16 +88,16 @@ MonoBehaviour:
         paragraph: 0
     h3:
       size: 30
-      font: {fileID: 0}
+      font: {fileID: 11400000, guid: 4e784a00fc185db4b92e3fa1e824bb1c, type: 2}
       weight: 400
       spacingOptions:
-        character: 0
+        character: 0.25
         word: 0
-        line: 0
+        line: 25
         paragraph: 0
     h4:
-      size: 36
-      font: {fileID: 0}
+      size: 24
+      font: {fileID: 11400000, guid: 4e784a00fc185db4b92e3fa1e824bb1c, type: 2}
       weight: 400
       spacingOptions:
         character: 0
@@ -105,17 +105,17 @@ MonoBehaviour:
         line: 0
         paragraph: 0
     p:
-      size: 36
-      font: {fileID: 0}
+      size: 30
+      font: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
       weight: 400
       spacingOptions:
-        character: 0
+        character: 0.5
         word: 0
-        line: 0
+        line: 38
         paragraph: 0
     caption:
-      size: 36
-      font: {fileID: 0}
+      size: 18
+      font: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
       weight: 400
       spacingOptions:
         character: 0

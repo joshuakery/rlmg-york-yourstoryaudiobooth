@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 using System;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -23,7 +24,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <summary>
         /// Executable file for external processes.
         /// </summary>
-		private const string FFMPEG = "ffmpeg";
+		private const string FFMPEG = "ffmpeg.exe";
 
         /// <summary>
         /// Template for ffmpeg for recording from an audio input device on Windows with overwrite
@@ -67,7 +68,7 @@ namespace JoshKery.York.AudioRecordingBooth
             {
                 Run(
                     new Settings(
-                        FFMPEG,
+                        ProcessFilePath,
                         string.Format(DOTRIMTEMPLATE, startTime, duration, fileIn, fileOut)
                     )
                 );
@@ -76,10 +77,17 @@ namespace JoshKery.York.AudioRecordingBooth
 
         protected override void OnAllProcessSuccess(int[] exitCodes)
         {
-            UnityEngine.Debug.Log("all finished trim");
+            RLMGLogger.Instance.Log(
+                "All finished trim.",
+                MESSAGETYPE.INFO
+            );
+
             foreach (int exitCode in exitCodes)
             {
-                UnityEngine.Debug.Log(exitCode);
+                RLMGLogger.Instance.Log(
+                    "Exit code: " + exitCode,
+                    MESSAGETYPE.INFO
+                );
             }
 
             base.OnAllProcessSuccess(exitCodes);

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -32,7 +33,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <summary>
         /// Executable file for external processes.
         /// </summary>
-		private const string FFMPEG = "ffmpeg";
+		private const string FFMPEG = "ffmpeg.exe";
 
         /// <summary>
         /// Template for ffmpeg for recording from an audio input device on Windows with overwrite
@@ -149,7 +150,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 // Send the settings and timeout over to be run
                 Run(
                     new Settings(
-                        FFMPEG,
+                        ProcessFilePath,
                         string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut),
                         STOPRECORDINGTEMPLATE
                     ),
@@ -176,11 +177,19 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <param name="exitCodes"></param>
         protected override void OnAllProcessSuccess(int[] exitCodes)
         {
-            Debug.Log("Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds);
+            //Debug.Log("Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds);
+            RLMGLogger.Instance.Log(
+                "Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds,
+                MESSAGETYPE.INFO
+            );
 
             foreach (int exitCode in exitCodes)
             {
-                UnityEngine.Debug.Log("Exit code: " + exitCode);
+                //UnityEngine.Debug.Log("Exit code: " + exitCode);
+                RLMGLogger.Instance.Log(
+                    "Exit code: " + exitCode,
+                    MESSAGETYPE.INFO
+                );
             }
 
             base.OnAllProcessSuccess(exitCodes);
@@ -226,7 +235,10 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
 		private void StopRecording()
         {
-            Debug.Log("stop recording");
+            RLMGLogger.Instance.Log(
+                "Stop Recording invoked.",
+                MESSAGETYPE.INFO
+            );
 
             standardInputEvent.Set();
 

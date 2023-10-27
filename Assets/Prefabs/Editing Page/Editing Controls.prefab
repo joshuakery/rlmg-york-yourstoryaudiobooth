@@ -67,10 +67,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -94,8 +94,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &496110144407849623
 GameObject:
@@ -264,7 +264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 611, y: -335}
+  m_AnchoredPosition: {x: 666, y: -301}
   m_SizeDelta: {x: 238, y: 66}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &892656422034546441
@@ -418,6 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &982527179559053796
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +667,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &1037426902001040657
 GameObject:
   m_ObjectHideFlags: 0
@@ -777,6 +781,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &1170530291124688958
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,6 +969,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!223 &7332538138945518005
 Canvas:
   m_ObjectHideFlags: 0
@@ -970,7 +978,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1170530291124688958}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -1089,6 +1097,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &1361377725627267159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1156,10 +1166,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1183,8 +1193,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1239,7 +1249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &1605554166902264766
 GameObject:
@@ -1384,6 +1394,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &1926863571696534309
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,10 +1463,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1478,8 +1490,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1534,7 +1546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &2144742118426840451
 GameObject:
@@ -1690,6 +1702,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &2245567446993795189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1781,6 +1795,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &2312110729156593051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1848,10 +1864,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1875,8 +1891,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1931,7 +1947,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &2697254728391064090
 GameObject:
@@ -2045,6 +2061,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &2761907623499088172
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,6 +2175,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &3039823668528324156
 GameObject:
   m_ObjectHideFlags: 0
@@ -2267,10 +2287,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2294,8 +2314,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2350,7 +2370,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &3081102388711149662
 GameObject:
@@ -2490,7 +2510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.75}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2521,6 +2541,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 2
+  overrideAlpha: 1
+  alpha: 0.75
 --- !u!1 &3327420855550034381
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,8 +2577,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3365672165468775896
 GameObject:
@@ -2670,6 +2692,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &3505402595159210134
 GameObject:
   m_ObjectHideFlags: 0
@@ -2782,6 +2806,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &3672552895705491317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2851,8 +2877,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: An error occurred while trimming this audio.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4e784a00fc185db4b92e3fa1e824bb1c, type: 2}
+  m_sharedMaterial: {fileID: -1937004645155081689, guid: 4e784a00fc185db4b92e3fa1e824bb1c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2886,9 +2912,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 0.25
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 25
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -3046,6 +3072,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &3716815234960776710
 GameObject:
   m_ObjectHideFlags: 0
@@ -3113,10 +3141,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3140,8 +3168,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3196,7 +3224,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &3867763234935126451
 GameObject:
@@ -3265,10 +3293,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3292,8 +3320,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -3348,7 +3376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &4045582579819095924
 GameObject:
@@ -3458,6 +3486,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &4078489959366941686
 GameObject:
   m_ObjectHideFlags: 0
@@ -3496,7 +3526,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 170, y: 8}
+  m_SizeDelta: {x: 173.2861, y: 14}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &5026604234132792080
 MonoBehaviour:
@@ -3545,7 +3575,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.75
+  m_Value: 0.45
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -3578,7 +3608,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7474852547492027214
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3808,6 +3838,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &4588045227178279607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3953,6 +3985,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &4742964206381577999
 GameObject:
   m_ObjectHideFlags: 0
@@ -4193,6 +4227,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5028490441902482661
 GameObject:
   m_ObjectHideFlags: 0
@@ -4305,6 +4341,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5162664154616220626
 GameObject:
   m_ObjectHideFlags: 0
@@ -4397,7 +4435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8714c362c0c8a6449a9559a31cdab9a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 2
+  radius: 4
 --- !u!114 &6125506241209799427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4412,6 +4450,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5207403296894745505
 GameObject:
   m_ObjectHideFlags: 0
@@ -4524,6 +4564,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5400143798586536284
 GameObject:
   m_ObjectHideFlags: 0
@@ -4636,6 +4678,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5416467744488837136
 GameObject:
   m_ObjectHideFlags: 0
@@ -4748,6 +4792,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5438271988865315296
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,6 +4906,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5685162404480626817
 GameObject:
   m_ObjectHideFlags: 0
@@ -4933,7 +4981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -37.5}
+  m_AnchoredPosition: {x: 0, y: -40.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &3415234499422147515
@@ -4954,7 +5002,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 26
+  m_Spacing: 26.6
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -5091,6 +5139,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &5827202748111151916
 GameObject:
   m_ObjectHideFlags: 0
@@ -5203,6 +5253,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &6124216375402333519
 GameObject:
   m_ObjectHideFlags: 0
@@ -5270,10 +5322,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5297,8 +5349,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -5353,7 +5405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &6260412679271774706
 GameObject:
@@ -5574,6 +5626,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &6803481786275508035
 GameObject:
   m_ObjectHideFlags: 0
@@ -5686,6 +5740,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &6901749231772424689
 GameObject:
   m_ObjectHideFlags: 0
@@ -5784,7 +5840,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.233
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5971,10 +6027,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5998,8 +6054,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6054,7 +6110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &7096798853912309424
 GameObject:
@@ -6168,6 +6224,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7190781949484038747
 GameObject:
   m_ObjectHideFlags: 0
@@ -6280,6 +6338,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7395208403537934567
 GameObject:
   m_ObjectHideFlags: 0
@@ -6371,6 +6431,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7443943329982509415
 GameObject:
   m_ObjectHideFlags: 0
@@ -6578,6 +6640,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7505140261394260627
 GameObject:
   m_ObjectHideFlags: 0
@@ -6727,6 +6791,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7623801340749259423
 GameObject:
   m_ObjectHideFlags: 0
@@ -6767,7 +6833,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 145}
+  m_AnchoredPosition: {x: 0, y: 10.2}
   m_SizeDelta: {x: 1570, y: 320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2452377833893624703
@@ -6792,7 +6858,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playbackManager: {fileID: 982126689607420990}
   playbackHandle: {fileID: 7968357818419710986}
-  trimSlider: {fileID: 6679443466283051099}
+  trimSliderWindow: {fileID: 6679443466283051099}
+  trimSlider: {fileID: 1755497199403603221}
   isPlayback: 1
 --- !u!1 &7896056789671605999
 GameObject:
@@ -6906,6 +6973,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &7933512160029339421
 GameObject:
   m_ObjectHideFlags: 0
@@ -6973,10 +7042,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00:00
+  m_text: <mspace=0.75em>00</mspace>:<mspace=0.75em>00</mspace>
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7000,8 +7069,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7056,7 +7125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
-  headingType: 9
+  headingType: 8
   fontColor: 1
 --- !u!1 &7954251383428862778
 GameObject:
@@ -7170,6 +7239,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &8041577174720776475
 GameObject:
   m_ObjectHideFlags: 0
@@ -7207,7 +7278,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -641, y: -332}
+  m_AnchoredPosition: {x: -641, y: -300.4}
   m_SizeDelta: {x: 288, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5180346160421774446
@@ -7421,6 +7492,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &8166735582131207618
 GameObject:
   m_ObjectHideFlags: 0
@@ -7720,6 +7793,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 4
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &8206850057998324664
 GameObject:
   m_ObjectHideFlags: 0
@@ -7833,8 +7908,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 65, y: -332}
-  m_SizeDelta: {x: 288, y: 60}
+  m_AnchoredPosition: {x: -35.8, y: -300.4}
+  m_SizeDelta: {x: 256, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2750508753764482423
 CanvasRenderer:
@@ -8081,6 +8156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultProcessFileName: 
+  processFileLocation: 0
   INFILENAME: out.mp3
   OUTFILENAME: out_trimmed.mp3
 --- !u!114 &7521726461284136000
@@ -8325,6 +8401,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &8819588063757069048
 GameObject:
   m_ObjectHideFlags: 0
@@ -8437,6 +8515,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 3
+  overrideAlpha: 0
+  alpha: 255
 --- !u!1 &8962670822339011119
 GameObject:
   m_ObjectHideFlags: 0
@@ -8454,7 +8534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &344249779723329321
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8584,7 +8664,7 @@ GameObject:
   - component: {fileID: 1514065748924544354}
   - component: {fileID: 3652281723779750666}
   - component: {fileID: 4644729635894595207}
-  - component: {fileID: 7335685710681490485}
+  - component: {fileID: 1264566890716997122}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -8634,7 +8714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.85882354, g: 0.8784314, b: 0.8862745, a: 1}
+  m_Color: {r: 0.07450981, g: 0.19607843, b: 0.25490198, a: 0.3}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8666,7 +8746,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 20
---- !u!114 &7335685710681490485
+--- !u!114 &1264566890716997122
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8679,7 +8759,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
-  colorChoice: 4
+  colorChoice: 3
+  overrideAlpha: 1
+  alpha: 0.3
 --- !u!1 &9006991334525948804
 GameObject:
   m_ObjectHideFlags: 0
@@ -8787,3 +8869,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: 0
+  overrideAlpha: 0
+  alpha: 255

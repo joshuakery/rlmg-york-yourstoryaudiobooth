@@ -43,15 +43,28 @@ namespace JoshKery.York.AudioRecordingBooth
             //Bug Workaround - the slider should represent the normalized time for HALF the audioClip's returned length
             if (audioSource?.clip != null && !isSeekable)
             {
-                value = Mathf.Min(audioSource.time / (audioSource.clip.length / 2f), 1f);
+                //Update the slider in parallel with the audioSource's playback
+                value = audioSource.time / (audioSource.clip.length / 2f);
             }
 
-            ///Bug Workaround - don't let the clip act like it's playing beyond the audio length
-            if (audioSource?.clip != null && audioSource.isPlaying && audioSource.time > audioSource.clip.length / 2f)
+            
+            if (audioSource?.clip != null && audioSource.isPlaying)
             {
-                PauseAudio();
-                audioSource.time = audioSource.clip.length / 2f;
+                //Bug Workaround - don't let the clip act like it's playing beyond the audio length
+                if (audioSource.time >= audioSource.clip.length / 2f)
+                {
+                    PauseAudio();
+                    audioSource.time = audioSource.clip.length / 2f;
+                }
+                //And limit audioSource playback to the slider max
+                else if (audioSource.time >= maxValue * (audioSource.clip.length / 2f))
+                {
+                    PauseAudio();
+                    audioSource.time = maxValue * (audioSource.clip.length / 2f);
+                }
             }
+
+            
 
         }
 
@@ -88,7 +101,14 @@ namespace JoshKery.York.AudioRecordingBooth
         private void PlayAudio()
         {
             if (audioSource != null)
+            {
+                //Restart if at the end
+                if (audioSource.time >= (audioSource.clip.length / 2f) * 0.99f)
+                    audioSource.time = minValue * (audioSource.clip.length / 2f);
+
                 audioSource.Play();
+            }
+                
 
             onPlay?.Invoke();
         }
@@ -124,7 +144,7 @@ namespace JoshKery.York.AudioRecordingBooth
             PauseAudio();
 
             if (audioSource != null)
-                audioSource.time = 0;
+                audioSource.time = minValue * (audioSource.clip.length / 2f);
         }
 
         public void OnPlayPauseAudio()
