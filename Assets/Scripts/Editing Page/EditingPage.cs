@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
+using DG.Tweening;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -74,13 +75,13 @@ namespace JoshKery.York.AudioRecordingBooth
                 volumeSlider.value = 0.75f;
         }
 
-        protected override void _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
+        protected override Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
             if (errorDisplay != null)
                 errorDisplay.Close(SequenceType.CompleteImmediately);
 
             StartCoroutine(InitCo());
-            base._Open(sequenceType, atPosition);
+            return base._Open(sequenceType, atPosition);
         }
 
         private IEnumerator InitCo()

@@ -32,7 +32,7 @@ namespace JoshKery.York.AudioRecordingBooth
             base.OnEnable();
 
             if (emailKeyboard != null)
-                emailKeyboard.onInit += Close;
+                emailKeyboard.onInit += OnInit;
 
             if (emailSubmissionHandler != null)
             {
@@ -54,7 +54,7 @@ namespace JoshKery.York.AudioRecordingBooth
             base.OnDisable();
 
             if (emailKeyboard != null)
-                emailKeyboard.onInit -= Close;
+                emailKeyboard.onInit -= OnInit;
 
             if (emailSubmissionHandler != null)
             {
@@ -69,6 +69,11 @@ namespace JoshKery.York.AudioRecordingBooth
                 mainSubmissionHandler.onSubmissionSuccess -= DismissError;
             }
 
+        }
+
+        private void OnInit()
+        {
+            Close();
         }
 
         private void OnValidationError(int inputField, string message)

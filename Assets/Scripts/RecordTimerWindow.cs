@@ -26,7 +26,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (process != null)
             {
-                process.onFirstProcessStarted += Open;
+                process.onFirstProcessStarted += OnFirstProcessStarted;
                 process.onStopRequested += CompleteCurrentSequenceAndClose;
                 process.onFail += CloseOnFail;
                 process.onInit += CompleteCurrentSequenceAndClose;
@@ -39,11 +39,16 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (process != null)
             {
-                process.onFirstProcessStarted -= Open;
+                process.onFirstProcessStarted -= OnFirstProcessStarted;
                 process.onStopRequested -= CompleteCurrentSequenceAndClose;
                 process.onFail -= CloseOnFail;
                 process.onInit -= CompleteCurrentSequenceAndClose;
             }
+        }
+
+        private void OnFirstProcessStarted()
+        {
+            Open();
         }
 
         private void CloseOnFail(System.Exception e)

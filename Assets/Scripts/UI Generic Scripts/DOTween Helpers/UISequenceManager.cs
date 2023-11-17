@@ -99,6 +99,12 @@ namespace JoshKery.GenericUI.DOTweenHelpers
             }
         }
 
+        public void CreateSequenceIfNull()
+        {
+            if (currentSequence == null)
+                _CreateNewSequence();
+        }
+
         public void JoinTween(Tween tween)
         {
             if (currentSequence == null)

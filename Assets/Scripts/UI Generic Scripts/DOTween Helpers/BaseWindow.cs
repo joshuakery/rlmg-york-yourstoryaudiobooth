@@ -164,28 +164,17 @@ namespace JoshKery.GenericUI.DOTweenHelpers
                 return null;
 
             Sequence sequence = GetSequenceWithControlledChildWindows(sequenceData, gameObject, childWindows);
-            switch (sequenceType)
-            {
-                case (SequenceType.CompleteImmediately):
-                    sequence.Complete();
-                    break;
-                case (SequenceType.UnSequenced):
-                    break;
-                case (SequenceType.Join):
-                    sequenceManager.JoinTween(sequence);
-                    break;
-                case (SequenceType.Append):
-                    sequenceManager.AppendTween(sequence);
-                    break;
-                case (SequenceType.Insert):
-                    sequenceManager.InsertTween(atPosition, sequence);
-                    break;
-                case (SequenceType.BackInsert):
-                    sequenceManager.InsertTween(sequenceManager.currentSequence.Duration() - atPosition, sequence);
-                    break;
-            }
-            return sequence;
 
+            if (sequenceManager != null)
+            {
+                //Make sure that we pass a non-null sequence to AttachTweenToSequence
+                sequenceManager.CreateSequenceIfNull();
+
+                //Do the work of attaching
+                AttachTweenToSequence(sequenceType, sequence, sequenceManager.currentSequence, false, atPosition, null);
+            }
+
+            return sequence;
         }
 
         /// <summary>
@@ -198,9 +187,9 @@ namespace JoshKery.GenericUI.DOTweenHelpers
             switch (windowAction)
             {
                 case (BaseWindow.WindowAction.Open):
-                    return _WindowAction(openSequence, SequenceType.UnSequenced, 0f);
+                    return _Open(SequenceType.UnSequenced);
                 case (BaseWindow.WindowAction.Close):
-                    return _WindowAction(closeSequence, SequenceType.UnSequenced, 0f);
+                    return _Close(SequenceType.UnSequenced);
                 case (BaseWindow.WindowAction.Pulse):
                     return null;
                 default:
@@ -490,82 +479,82 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         #endregion
 
         #region Window Open Methods
-        protected virtual void _Open(
+        protected virtual Sequence _Open(
             SequenceType sequenceType = SequenceType.UnSequenced,
             float atPosition = 0f
         )
         {
-            _WindowAction(openSequence, sequenceType, atPosition);
             isOpen = true;
+            return _WindowAction(openSequence, sequenceType, atPosition);
         }
 
-        public virtual void Open(SequenceType sequenceType)
+        public virtual Tween Open(SequenceType sequenceType)
         {
-            _Open(sequenceType);
+            return _Open(sequenceType);
         }
 
-        public virtual void Open(float atPosition)
+        public virtual Tween Open(float atPosition)
         {
-            _Open(SequenceType.Insert, atPosition);
+            return _Open(SequenceType.Insert, atPosition);
         }
 
-        public virtual void Open()
+        public virtual Tween Open()
         {
-            _Open(SequenceType.Join);
+            return _Open(SequenceType.Join);
         }
         #endregion
 
         #region Window Close Methods
-        protected virtual void _Close(
+        protected virtual Sequence _Close(
             SequenceType sequenceType = SequenceType.UnSequenced,
             float atPosition = 0f
         )
         {
-            _WindowAction(closeSequence, sequenceType, atPosition);
             isOpen = false;
+            return _WindowAction(closeSequence, sequenceType, atPosition);
         }
 
-        public virtual void Close(SequenceType sequenceType)
+        public virtual Sequence Close(SequenceType sequenceType)
         {
-            _Close(sequenceType);
+            return _Close(sequenceType);
         }
 
-        public virtual void Close(float atPosition)
+        public virtual Sequence Close(float atPosition)
         {
-            _Close(SequenceType.Insert, atPosition);
+            return _Close(SequenceType.Insert, atPosition);
         }
 
-        public virtual void Close()
+        public virtual Sequence Close()
         {
-            _Close(SequenceType.Join);
+            return _Close(SequenceType.Join);
         }
         #endregion
 
         #region Window Toggle Methods
-        protected virtual void _Toggle(
+        protected virtual Sequence _Toggle(
             SequenceType sequenceType = SequenceType.UnSequenced,
             float atPosition = 0f
         )
         {
             if (isOpen)
-                _Close(sequenceType, atPosition);
+                return _Close(sequenceType, atPosition);
             else
-                _Open(sequenceType, atPosition);
+                return _Open(sequenceType, atPosition);
         }
 
-        public virtual void Toggle(SequenceType sequenceType = SequenceType.UnSequenced)
+        public virtual Tween Toggle(SequenceType sequenceType = SequenceType.UnSequenced)
         {
-            _Toggle(sequenceType);
+            return _Toggle(sequenceType);
         }
 
-        public virtual void Toggle(float atPosition)
+        public virtual Tween Toggle(float atPosition)
         {
-            _Toggle(SequenceType.Insert, atPosition);
+            return _Toggle(SequenceType.Insert, atPosition);
         }
 
-        public virtual void Toggle()
+        public virtual Tween Toggle()
         {
-            _Toggle(SequenceType.Join);
+            return _Toggle(SequenceType.Join);
         }
         #endregion
 

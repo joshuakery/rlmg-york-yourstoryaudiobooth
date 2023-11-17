@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using rlmg.utils;
+using DG.Tweening;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -33,7 +34,7 @@ namespace JoshKery.York.AudioRecordingBooth
             errorDisplay = FindObjectOfType<EmailErrorDisplay>();
         }
 
-        protected override void _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
+        protected override Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
             if (errorDisplay != null)
                 errorDisplay.Close(SequenceType.CompleteImmediately);
@@ -57,7 +58,7 @@ namespace JoshKery.York.AudioRecordingBooth
             if (subscribeToggle != null)
                 subscribeToggle.isOn = true;
 
-            base._Open(sequenceType, atPosition);
+            return base._Open(sequenceType, atPosition);
         }
     }
 }

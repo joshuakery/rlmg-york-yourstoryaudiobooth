@@ -20,23 +20,33 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             base.OnEnable();
 
-            process.onTrimError += Open;
+            process.onTrimError += OnTrimError;
             process.onFail += OnFail;
-            process.onTrimSuccess += Close;
+            process.onTrimSuccess += OnTrimSuccess;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
 
-            process.onTrimError -= Open;
+            process.onTrimError -= OnTrimError;
             process.onFail -= OnFail;
-            process.onTrimSuccess -= Close;
+            process.onTrimSuccess -= OnTrimSuccess;
+        }
+
+        private void OnTrimError()
+        {
+            Open();
         }
 
         private void OnFail(System.Exception e)
         {
             Open();
+        }
+
+        private void OnTrimSuccess()
+        {
+            Close();
         }
     }
 }

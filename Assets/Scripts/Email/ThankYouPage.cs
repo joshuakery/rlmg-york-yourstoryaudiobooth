@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -17,7 +18,7 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private MainSubmissionHandler mainSubmissionHandler;
 
-        protected override void _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
+        protected override Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
             if (mainSubmissionHandler != null)
             {
@@ -27,7 +28,7 @@ namespace JoshKery.York.AudioRecordingBooth
                     noSaveThankYou.SetActive(!mainSubmissionHandler.doSaveData);
             }
 
-            base._Open(sequenceType, atPosition);
+            return base._Open(sequenceType, atPosition);
         }
     }
 }

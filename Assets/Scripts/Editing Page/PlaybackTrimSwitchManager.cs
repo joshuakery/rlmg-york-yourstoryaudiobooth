@@ -20,6 +20,9 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private MinMaxSlider trimSlider;
 
+        [SerializeField]
+        private AudioVizWindow audioVizWindow;
+
         public bool isPlayback = true;
 
         public delegate void OnSwitchToTrimEvent();
@@ -47,6 +50,30 @@ namespace JoshKery.York.AudioRecordingBooth
 
             //just hide the handles
             SwitchHandles(toPlayback);
+
+            //todo kill audioVizWindow current tween here
+            //todo manage the sequence here?
+            // e.g. call the opens and closes on the respective components, don't bury it in the audioVizWindow
+            //Open
+            /*
+             * Open for trimming
+             * border fade in and playback head fade out
+             * then shrink border and viz (their open actions)
+             * then fade in trim handles
+             * 
+             * Close from trimming
+             * handles fade out and covers fade in
+             * then grow border and viz (their close actions)
+             * then fade out border and fade in playback head
+             * 
+             * 
+             * */
+
+            if (audioVizWindow != null)
+                if (toPlayback)
+                    audioVizWindow.Close();
+                else
+                    audioVizWindow.Open();
             
         }
 
@@ -56,8 +83,8 @@ namespace JoshKery.York.AudioRecordingBooth
             {
                 if (!toPlayback)
                 {
-                    playbackHandle.Close();
-                    trimSliderWindow.Open();
+/*                    playbackHandle.Close();
+                    trimSliderWindow.Open();*/
 
                     isPlayback = false;
 
@@ -65,8 +92,8 @@ namespace JoshKery.York.AudioRecordingBooth
                 }
                 else
                 {
-                    playbackHandle.Open();
-                    trimSliderWindow.Close();
+/*                    playbackHandle.Open();
+                    trimSliderWindow.Close();*/
 
                     isPlayback = true;
 

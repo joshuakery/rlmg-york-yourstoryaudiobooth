@@ -19,11 +19,7 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private AudioSource audioSource;
 
-        /// <summary>
-        /// Display for shader
-        /// </summary>
-        [SerializeField]
-        private UnityEngine.UI.RawImage rawImage;
+
 
         /// <summary>
         /// Custom material with shader that will use this waveform data
@@ -31,8 +27,9 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private Material material;
 
-        
 
+        [SerializeField]
+        private UnityEngine.UI.RawImage displayRawImage;
         
 
         private int samplesize;
@@ -46,6 +43,12 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
         [SerializeField]
         private bool doSaveOut = false;
+
+        /// <summary>
+        /// Display for shader
+        /// </summary>
+        [SerializeField]
+        private UnityEngine.UI.RawImage debugRawImage;
 
         private void OnEnable()
         {
@@ -61,20 +64,13 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void SaveWaveform()
         {
-            if (audioSource != null)
+            if (audioSource != null && displayRawImage != null)
             {
-                int i_width = Mathf.RoundToInt(rawImage.rectTransform.rect.width);
+                int i_width = Mathf.RoundToInt(displayRawImage.rectTransform.rect.width);
 
                 Texture2D texwav = GetWaveform(i_width, nStripes);
 
-                if (doSaveOut)
-                {
-                    byte[] bytes = texwav.EncodeToPNG();
-                    System.IO.File.WriteAllBytes(Application.streamingAssetsPath + "/test-waveform-output.png", bytes);
-                }
-
-                if (rawImage != null)
-                    rawImage.texture = texwav;
+                
 
                 if (material != null)
                 {
@@ -82,6 +78,19 @@ namespace JoshKery.York.AudioRecordingBooth
                     material.SetFloat("_NumStripes", nStripes);
                     material.SetTexture("_WaveformTex", texwav);
                 }
+
+                if (displayRawImage != null)
+                    displayRawImage.texture = null;
+
+                //Debug
+                if (doSaveOut)
+                {
+                    byte[] bytes = texwav.EncodeToPNG();
+                    System.IO.File.WriteAllBytes(Application.streamingAssetsPath + "/test-waveform-output.png", bytes);
+                }
+
+                if (debugRawImage != null)
+                    debugRawImage.texture = texwav;
 
             }
         }

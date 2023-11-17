@@ -14,20 +14,20 @@ namespace JoshKery.York.AudioRecordingBooth
                 process = FindObjectOfType<AudioRecorderProcess>();
         }
 
-        protected override void _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
+        protected override DG.Tweening.Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
             if (process != null)
                 process.Init();
 
-            base._Open(sequenceType, atPosition);
+            return base._Open(sequenceType, atPosition);
         }
 
-        public override void Close()
+        public override DG.Tweening.Sequence Close()
         {
             if (process != null)
                 process.CancelTask();
 
-            base.Close();
+            return base.Close();
         }
     }
 }
