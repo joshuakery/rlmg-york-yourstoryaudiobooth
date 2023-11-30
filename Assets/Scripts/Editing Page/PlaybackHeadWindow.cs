@@ -29,6 +29,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 playbackManager.onPause += OnPause;
                 playbackManager.onPointerDownEvent += OnPointerDownEvent;
                 playbackManager.onPointerUpEvent += OnPointerUpEvent;
+                playbackManager.onInitEvent += OnInit;
                 playbackManager.onValueChanged.AddListener(OnValueChanged);
             }    
         }
@@ -43,6 +44,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 playbackManager.onPause -= OnPause;
                 playbackManager.onPointerDownEvent-= OnPointerDownEvent;
                 playbackManager.onPointerUpEvent -= OnPointerUpEvent;
+                playbackManager.onInitEvent -= OnInit;
                 playbackManager.onValueChanged.RemoveListener(OnValueChanged);
             }
         }
@@ -77,6 +79,13 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (isOpen)
                 Close();
+        }
+
+        private void OnInit()
+        {
+            sequenceManager.KillCurrentSequence();
+
+            Close(SequenceType.CompleteImmediately);
         }
 
         private void OnValueChanged(float value)

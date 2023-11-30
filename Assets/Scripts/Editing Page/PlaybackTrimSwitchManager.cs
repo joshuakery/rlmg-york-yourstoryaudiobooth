@@ -12,16 +12,43 @@ namespace JoshKery.York.AudioRecordingBooth
         private PlaybackUIManager playbackManager;
 
         [SerializeField]
+        private UISequenceManager sequenceManager;
+
+        [SerializeField]
         private BaseWindow playbackHandle;
 
         [SerializeField]
-        private BaseWindow trimSliderWindow;
+        private PlaybackHeadWindow playbackHeadWindow;
+
+        [SerializeField]
+        private BaseWindow rightHandleWindow;
+
+        [SerializeField]
+        private BaseWindow leftHandleWindow;
 
         [SerializeField]
         private MinMaxSlider trimSlider;
 
         [SerializeField]
         private AudioVizWindow audioVizWindow;
+
+        [SerializeField]
+        private BaseWindow rightCoverWindow;
+
+        [SerializeField]
+        private BaseWindow leftCoverWindow;
+
+        [SerializeField]
+        private BaseWindow measurementDisplayWindow;
+
+        [SerializeField]
+        private MeasurementDisplay measurementDisplay;
+
+        [SerializeField]
+        private SliderMiddleGraphicWindow middleGraphicWindow;
+
+        [SerializeField]
+        private BaseWindow borderFadeWindow;
 
         public bool isPlayback = true;
 
@@ -31,8 +58,25 @@ namespace JoshKery.York.AudioRecordingBooth
         public delegate void OnSwitchToPlaybackEvent();
         public OnSwitchToPlaybackEvent onPlayback;
 
-        public void Switch(bool toPlayback)
+        private bool trimSliderIsUnTrimmed
         {
+            get
+            {
+                if (trimSlider != null)
+                    return trimSlider.Values.minValue == 0 && trimSlider.Values.maxValue == 1;
+                else
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="doSwitchToPlaybackMode"></param>
+        public void Switch(bool doSwitchToPlaybackMode)
+        {
+            isPlayback = doSwitchToPlaybackMode;
+
             if (playbackManager != null)
             {
                 if (trimSlider != null)
@@ -41,66 +85,135 @@ namespace JoshKery.York.AudioRecordingBooth
                     playbackManager.maxValue = trimSlider.Values.maxValue;
                 }
 
-                if (toPlayback) //Pause AND start start to min
+                if (doSwitchToPlaybackMode) //Pause AND start start to min
+                {
                     playbackManager.Init();
+                }
                 else //Only pause here so we don't jump the slider around
                     playbackManager.PauseAudio();
 
             }
 
-            //just hide the handles
-            SwitchHandles(toPlayback);
+/*            if (playbackHeadWindow != null && doSwitchToPlaybackMode)
+                playbackHeadWindow.Close();*/
 
-            //todo kill audioVizWindow current tween here
-            //todo manage the sequence here?
-            // e.g. call the opens and closes on the respective components, don't bury it in the audioVizWindow
-            //Open
-            /*
-             * Open for trimming
-             * border fade in and playback head fade out
-             * then shrink border and viz (their open actions)
-             * then fade in trim handles
-             * 
-             * Close from trimming
-             * handles fade out and covers fade in
-             * then grow border and viz (their close actions)
-             * then fade out border and fade in playback head
-             * 
-             * 
-             * */
-
-            if (audioVizWindow != null)
-                if (toPlayback)
-                    audioVizWindow.Close();
-                else
-                    audioVizWindow.Open();
-            
-        }
-
-        private void SwitchHandles(bool toPlayback)
-        {
-            if (playbackHandle != null && trimSliderWindow != null)
+            if (sequenceManager != null)
             {
-                if (!toPlayback)
+                sequenceManager.KillCurrentSequence();
+            }
+
+            if (doSwitchToPlaybackMode)
+            {
+                if (rightHandleWindow != null)
+                    rightHandleWindow.Close(0f);
+
+                if (leftHandleWindow != null)
+                    leftHandleWindow.Close(0f);
+
+                if (leftCoverWindow != null)
+                    leftCoverWindow.Open(0f);
+
+                if (rightCoverWindow != null)
+                    rightCoverWindow.Open(0f);
+
+                if (trimSliderIsUnTrimmed)
                 {
-/*                    playbackHandle.Close();
-                    trimSliderWindow.Open();*/
+                    if (middleGraphicWindow != null)
+                        middleGraphicWindow.Close(0f);
 
-                    isPlayback = false;
+                    if (audioVizWindow != null)
+                        audioVizWindow.Close(0f);
 
-                    onTrim?.Invoke();
+                    if (borderFadeWindow != null)
+                        borderFadeWindow.Close(0f);
+
+                    if (playbackHandle != null)
+                        playbackHandle.Open(0f);
                 }
                 else
                 {
-/*                    playbackHandle.Open();
-                    trimSliderWindow.Close();*/
+                    if (measurementDisplayWindow != null)
+                        measurementDisplayWindow.Close(0f);
 
-                    isPlayback = true;
+                    if (middleGraphicWindow != null)
+                        middleGraphicWindow.Close(0.5f);
 
-                    onPlayback?.Invoke();
+                    if (audioVizWindow != null)
+                        audioVizWindow.Close(0.5f);
+
+                    if (borderFadeWindow != null)
+                        borderFadeWindow.Close(0.9f);
+
+                    if (playbackHandle != null)
+                        playbackHandle.Open(0.9f);
+
+                    if (measurementDisplay != null)
+                        sequenceManager.InsertCallback(0.9f, () => { measurementDisplay.UpdateDisplay(); });
+
+                    if (measurementDisplayWindow != null)
+                        measurementDisplayWindow.Open(0.9f);
                 }
+
+                
+
+                onPlayback?.Invoke();
+            }
+            else
+            {
+                if (playbackHandle != null)
+                    playbackHandle.Close(0f);
+
+                if (borderFadeWindow != null)
+                    borderFadeWindow.Open(0f);
+
+                if (leftCoverWindow != null)
+                    leftCoverWindow.Close(0f);
+
+                if (rightCoverWindow != null)
+                    rightCoverWindow.Close(0f);
+
+                if (trimSliderIsUnTrimmed)
+                {
+                    if (middleGraphicWindow != null)
+                        middleGraphicWindow.Open(0f);
+
+                    if (audioVizWindow != null)
+                        audioVizWindow.Open(0f);
+
+                    if (rightHandleWindow != null)
+                        rightHandleWindow.Open(0f);
+
+                    if (leftHandleWindow != null)
+                        leftHandleWindow.Open(0f);
+                }
+                else
+                {
+                    if (measurementDisplayWindow != null)
+                        measurementDisplayWindow.Close(0f);
+
+                    if (middleGraphicWindow != null)
+                        middleGraphicWindow.Open(0.5f);
+
+                    if (audioVizWindow != null)
+                        audioVizWindow.Open(0.5f);
+
+                    if (rightHandleWindow != null)
+                        rightHandleWindow.Open(0.7f);
+
+                    if (leftHandleWindow != null)
+                        leftHandleWindow.Open(0.7f);
+
+                    if (measurementDisplay != null)
+                        sequenceManager.InsertCallback(0.7f, () => { measurementDisplay.UpdateDisplay(); });
+
+                    if (measurementDisplayWindow != null)
+                        measurementDisplayWindow.Open(0.7f);
+                }
+
+                onTrim?.Invoke();
             }
         }
+
         public void OnSwitch()
         {
             //Toggle

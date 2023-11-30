@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 using TMPro;
 
 namespace JoshKery.York.AudioRecordingBooth
@@ -10,6 +11,12 @@ namespace JoshKery.York.AudioRecordingBooth
     {
         [SerializeField]
         private AudioClipLoader audioClipLoader;
+
+        [SerializeField]
+        private MinMaxSlider minMaxSlider;
+
+        [SerializeField]
+        private PlaybackTrimSwitchManager switchManager;
 
         [SerializeField]
         private TMP_Text[] textDisplays;
@@ -28,20 +35,34 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void OnClipLoaded()
         {
+            UpdateDisplay();
+        }
+
+        public void UpdateDisplay()
+        {
+            Debug.Log("updaing display");
             if (audioClipLoader == null) { return; }
+            if (switchManager == null) { return; }
+            if (minMaxSlider == null) { return; }
             if (textDisplays == null || textDisplays.Length <= 1) { return; }
 
             //Compensating for double-length Unity bug
-            float duration = audioClipLoader.CurrentClip.length / 2f;
-            float interval = duration / (textDisplays.Length - 1);
+            float fraction = minMaxSlider.Values.maxValue - minMaxSlider.Values.minValue;
+            float clipDuration = audioClipLoader.CurrentClip.length / 2f;
 
-            for (int i=0; i<textDisplays.Length; i++)
+            //Depending on which mode, playback or trimming, display the time based on the slider or not
+            float displayDuration = switchManager.isPlayback ? clipDuration * fraction : clipDuration;
+            float startTime = switchManager.isPlayback ? minMaxSlider.Values.minValue * clipDuration : 0;
+
+            float displayInterval = displayDuration / (textDisplays.Length - 1);
+
+            for (int i = 0; i < textDisplays.Length; i++)
             {
                 TMP_Text textDisplay = textDisplays[i];
 
                 if (textDisplay != null)
                 {
-                    float time = i * interval;
+                    float time = startTime + (i * displayInterval);
 
                     TimeSpan timeSpan = TimeSpan.FromSeconds(time);
 

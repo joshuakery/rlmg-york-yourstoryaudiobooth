@@ -36,6 +36,9 @@ namespace JoshKery.York.AudioRecordingBooth
         public delegate void OnPointerUpEvent();
         public OnPointerUpEvent onPointerUpEvent;
 
+        public delegate void OnInit();
+        public OnInit onInitEvent;
+
         protected override void Update()
         {
             base.Update();
@@ -145,6 +148,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (audioSource != null)
                 audioSource.time = minValue * (audioSource.clip.length / 2f);
+
+            onInitEvent?.Invoke();
         }
 
         public void OnPlayPauseAudio()

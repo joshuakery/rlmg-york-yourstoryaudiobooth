@@ -502,6 +502,11 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         {
             return _Open(SequenceType.Join);
         }
+
+        public virtual void DoOpen()
+        {
+            _Open(SequenceType.Join);
+        }
         #endregion
 
         #region Window Close Methods
@@ -527,6 +532,11 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         public virtual Sequence Close()
         {
             return _Close(SequenceType.Join);
+        }
+
+        public virtual void DoClose()
+        {
+            _Close(SequenceType.Join);
         }
         #endregion
 
@@ -555,6 +565,11 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         public virtual Tween Toggle()
         {
             return _Toggle(SequenceType.Join);
+        }
+
+        public virtual void DoToggle()
+        {
+            _Toggle(SequenceType.Join);
         }
         #endregion
 
