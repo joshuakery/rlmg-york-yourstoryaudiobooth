@@ -300,66 +300,27 @@ namespace JoshKery.York.AudioRecordingBooth
             OpenPage(Page.EmailEntry);
         }
 
+        /// <summary>
+        /// Opens or closes some supporting elements, conditionally,
+        /// in addition to the corresponding PageWindow's Open or Close method being called
+        /// </summary>
+        /// <param name="page"></param>
         public void OpenPage(Page page)
         {
-            switch (page)
-            {
-                
-                case Page.Recording:
-                    if (ageEmailNameContainerWindow != null)
-                        ageEmailNameContainerWindow.Close();
+            bool isRecordingOrEditing = (page == Page.Recording || page == Page.Editing);
+            bool isAgeEmailOrName = (page == Page.AgeSelection || page == Page.EmailEntry || page == Page.NameEntry);
 
-                    if (recordingEditingFooterWindow != null)
-                        recordingEditingFooterWindow.Open();
+            if (recordingEditingFooterWindow != null)
+                recordingEditingFooterWindow.OpenIfTrueElseClose(isRecordingOrEditing);
 
-                    if (doneEditingButtonWindow != null)
-                        doneEditingButtonWindow.Close();
+            if (doneEditingButtonWindow != null)
+                doneEditingButtonWindow.OpenIfTrueElseClose(page == Page.Editing);
 
-                    break;
+            if (ageEmailNameContainerWindow != null)
+                ageEmailNameContainerWindow.OpenIfTrueElseClose(isAgeEmailOrName || page == Page.ThankYou);
 
-                case Page.Editing:
-                    if (ageEmailNameContainerWindow != null)
-                        ageEmailNameContainerWindow.Close();
-
-                    if (recordingEditingFooterWindow != null)
-                        recordingEditingFooterWindow.Open();
-
-                    if (doneEditingButtonWindow != null)
-                        doneEditingButtonWindow.Open();
-
-                    break;
-
-                case Page.AgeSelection:
-                case Page.EmailEntry:
-                case Page.NameEntry:
-                    if (ageEmailNameContainerWindow != null)
-                        ageEmailNameContainerWindow.Open();
-
-                    if (closeAgeEmailNameContainerButtonWindow != null)
-                        closeAgeEmailNameContainerButtonWindow.Open();
-
-                    break;
-
-                case Page.ThankYou:
-                    if (ageEmailNameContainerWindow != null)
-                        ageEmailNameContainerWindow.Open();
-
-                    if (closeAgeEmailNameContainerButtonWindow != null)
-                        closeAgeEmailNameContainerButtonWindow.Close();
-
-                    break;
-
-                
-
-                default:
-                    if (ageEmailNameContainerWindow != null)
-                        ageEmailNameContainerWindow.Close();
-
-                    if (recordingEditingFooterWindow != null)
-                        recordingEditingFooterWindow.Close();
-
-                    break;
-            }
+            if (closeAgeEmailNameContainerButtonWindow != null)
+                closeAgeEmailNameContainerButtonWindow.OpenIfTrueElseClose(isAgeEmailOrName);
 
             CurrentPage = page;
             onNewPage(page);

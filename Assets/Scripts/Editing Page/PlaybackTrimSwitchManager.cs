@@ -69,6 +69,7 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
+
         /// <summary>
         /// 
         /// </summary>

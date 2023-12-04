@@ -40,7 +40,6 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public void UpdateDisplay()
         {
-            Debug.Log("updaing display");
             if (audioClipLoader == null) { return; }
             if (switchManager == null) { return; }
             if (minMaxSlider == null) { return; }

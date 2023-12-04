@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 523310076}
   - component: {fileID: 523310075}
   - component: {fileID: 523310079}
+  - component: {fileID: 523310080}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -354,6 +355,7 @@ MonoBehaviour:
     onCompleteEvent:
       m_PersistentCalls:
         m_Calls: []
+  directChildWindowsOnly: 1
   childWindows: []
   pageType: 0
   audioClipLoader: {fileID: 1372536068}
@@ -361,6 +363,18 @@ MonoBehaviour:
   trimSlider: {fileID: 791462849}
   volumeSlider: {fileID: 465735810}
   playbackTrimSwitchManager: {fileID: 1437150219}
+--- !u!225 &523310080
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523310074}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &791462849 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1755497199403603221, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
@@ -565,7 +579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1425527480
 RectTransform:
   m_ObjectHideFlags: 0
@@ -574,7 +588,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1425527479}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -583,7 +597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 145, y: 189.77}
+  m_AnchoredPosition: {x: 263, y: 189.77}
   m_SizeDelta: {x: 924.15, y: 379.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1425527482
@@ -606,7 +620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: abacd8421079e294c8dfdb2665c64d8d, type: 2}
+  m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1026,6 +1040,10 @@ PrefabInstance:
     - target: {fileID: 3039823668528324156, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
       propertyPath: m_Name
       value: Editing Controls
+      objectReference: {fileID: 0}
+    - target: {fileID: 3039823668528324156, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3069347852538961682, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1482,6 +1500,10 @@ PrefabInstance:
     - target: {fileID: 7129279046082757656, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7299818230942265728, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 7312032754634001412, guid: 689412fd0dab57b40924c2ad66e25a79, type: 3}
       propertyPath: m_AnchorMax.y

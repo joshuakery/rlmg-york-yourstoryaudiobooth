@@ -90,6 +90,9 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         [SerializeField]
         protected UIAnimationSequenceData closeSequence;
 
+        [SerializeField]
+        private bool directChildWindowsOnly = true;
+
         /// <summary>
         /// Array of BaseWindows that are used when an animation is prepared using
         /// all childWindows option
@@ -113,7 +116,10 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         /// </summary>
         protected virtual void ResetChildWindows()
         {
-            childWindows = GetComponentsInChildren<BaseWindow>();
+            if (directChildWindowsOnly)
+                childWindows = GetComponentsInChildren<BaseWindow>().Where(c => c.transform.parent == transform).ToArray();
+            else
+                childWindows = GetComponentsInChildren<BaseWindow>();
 
             List<BaseWindow> aux = new List<BaseWindow>();
             foreach (BaseWindow childWindow in childWindows)
@@ -565,6 +571,14 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         public virtual Tween Toggle()
         {
             return _Toggle(SequenceType.Join);
+        }
+
+        public virtual Tween OpenIfTrueElseClose(bool doOpen, SequenceType sequenceType = SequenceType.UnSequenced)
+        {
+            if (doOpen)
+                return _Open(sequenceType);
+            else
+                return _Close(sequenceType);
         }
 
         public virtual void DoToggle()
