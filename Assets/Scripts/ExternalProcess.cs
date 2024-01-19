@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
 using System;
+using System.Text;
 using UnityEngine;
 
 
@@ -16,6 +17,9 @@ using UnityEngine;
 //https://stackoverflow.com/questions/70059130/continuously-reading-output-stdout-from-process-in-c-accessing-multiple-time
 
 //----> https://stackoverflow.com/questions/58363535/c-sharp-execute-threading-threadpool-queueuserworkitem-callback-in-main-thread-a
+
+//Getting standardoutput
+//https://stackoverflow.com/questions/36324997/how-can-i-get-the-console-output-of-a-process-while-still-showing-it-in-the-cons
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -117,7 +121,8 @@ namespace JoshKery.York.AudioRecordingBooth
 		/// 
 		/// </summary>
 		/// <param name="exitCodes">Exit codes from processes</param>
-		public delegate void OnAllProcessSuccessEvent(int[] exitCodes);
+		/// <param name="outputStringBuilder">Output string from System Process</param>
+		public delegate void OnAllProcessSuccessEvent(int[] exitCodes, StringBuilder outputStringBuilder);
 
 		/// <summary>
 		/// 
@@ -211,8 +216,8 @@ namespace JoshKery.York.AudioRecordingBooth
 			settings.onFirstProcessStartedWrapper = new Action(() => syncContext.Post(_ => OnFirstProcessStarted(), null));
 
 			// invoked when ExternalProcessTask completes successfully
-			settings.onAllProcessFinishedWrapper = new Action<int[]>(
-					exitCodes => syncContext.Post(_ => OnAllProcessSuccess(exitCodes), null)
+			settings.onAllProcessFinishedWrapper = new Action<int[], StringBuilder>(
+					(exitCodes, outputStringBuilder) => syncContext.Post(_ => OnAllProcessSuccess(exitCodes, outputStringBuilder), null)
 				);
 
 
@@ -267,6 +272,12 @@ namespace JoshKery.York.AudioRecordingBooth
 						settings.onFailWrapper(x);
 						return true;
 					}
+					else if (x is IOException)
+                    {
+						UnityEngine.Debug.LogError("IOException. Perhaps Process window was closed. Exception: " + x.ToString());
+						settings.onFailWrapper(x);
+						return false;
+					}
 					else
                     {
 						UnityEngine.Debug.LogError("Unknown exception in Main Task: " + x.ToString());
@@ -316,17 +327,27 @@ namespace JoshKery.York.AudioRecordingBooth
 			ProcessStartInfo startInfo = new ProcessStartInfo(settings.process);
 
 			// UseShellExecute must be false and RedirectStandardInput must be true to pass standardInput to the active Process
-			startInfo.UseShellExecute = string.IsNullOrEmpty(startInfo.FileName);
-			startInfo.RedirectStandardInput = true; //if UseShellExecute is true, then StandardInput won't work
+			startInfo.UseShellExecute = false;
 
 			// Do not create external process window
-			startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+			//startInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			startInfo.CreateNoWindow = true;
+
+			startInfo.WorkingDirectory = System.Environment.CurrentDirectory;
+			startInfo.ErrorDialog = true;
+
+			startInfo.RedirectStandardInput = true; //if UseShellExecute is true, then StandardInput won't work
+			startInfo.RedirectStandardOutput = true;
+			startInfo.RedirectStandardError = true;
 
 			Process process;
 
 			// These exitCodes will be passed to the main Unity thread via settings.onProcessFinishedWrapper
 			int[] exitCodes = new int[settings.commands.Length];
+
+			// Output string
+			int lineCount = 0;
+			StringBuilder output = new StringBuilder();
 
 			// Run each command
 			for (int commandIndex = 0; commandIndex < settings.commands.Length; commandIndex++)
@@ -342,7 +363,29 @@ namespace JoshKery.York.AudioRecordingBooth
 						//Do give us our exit codes
 						process.EnableRaisingEvents = true;
 
+						process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+						{
+							// Prepend line numbers to each line of the output.
+							if (!String.IsNullOrEmpty(e.Data))
+							{
+								lineCount++;
+								output.Append("\n[" + lineCount + "]: " + e.Data);
+							}
+						});
+						process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+						{
+							if (!String.IsNullOrEmpty(e.Data))
+                            {
+								lineCount++;
+								output.Append("\n[" + lineCount + "]: " + e.Data);
+							}
+						});
+
 						process.Start();
+
+						process.BeginOutputReadLine();
+						process.BeginErrorReadLine();
+
 
 						// Synchronously signal main Unity thread that we are starting the processes
 						if (commandIndex == 0)
@@ -367,6 +410,7 @@ namespace JoshKery.York.AudioRecordingBooth
                                 {
 									process.Kill();
 									settings.ctoken.ThrowIfCancellationRequested();
+									break;
                                 }
 
 								//Then the exitCommand can be passed to this Process
@@ -379,6 +423,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
 						//Wait for any final process work e.g. for file to save
 						process.WaitForExit();
+						//process.Close() is taken care of by "using"
+
 						exitCodes[commandIndex] = process.ExitCode;
 					}
 
@@ -388,9 +434,19 @@ namespace JoshKery.York.AudioRecordingBooth
 					//Throw back up to Main Task
 					throw (e);
                 }
+				catch (IOException e)
+				{
+					UnityEngine.Debug.LogError(
+						"IOException in ExternalProcessAction Task. Perhaps Process window was closed.\nException: " +
+						e.ToString()
+					);
+					UnityEngine.Debug.Log("Process output: " + output.ToString());
+					//Throw back up to Main Task
+					throw (e);
+				}
 				catch (Exception e)
 				{
-					UnityEngine.Debug.Log("Unknown exception in ExternalProcessAction Task: " + e.ToString());
+					UnityEngine.Debug.LogError("Unknown exception in ExternalProcessAction Task: " + e.ToString());
 					//Throw back up to Main Task
 					throw (e);
 				}
@@ -405,7 +461,7 @@ namespace JoshKery.York.AudioRecordingBooth
 			}//end for loop
 
 			// Synchronously signal the main Unity thread that we are finished successfully with the processes
-			settings.onAllProcessFinishedWrapper(exitCodes);
+			settings.onAllProcessFinishedWrapper(exitCodes, output);
 		}
 
 		/// <summary>
@@ -441,9 +497,9 @@ namespace JoshKery.York.AudioRecordingBooth
 		/// </summary>
 		/// <param name="onAllProcessSuccessWrapper"></param>
 		/// <param name="exitCodes"></param>
-		protected virtual void OnAllProcessSuccess(int[] exitCodes)
+		protected virtual void OnAllProcessSuccess(int[] exitCodes, StringBuilder outputStringBuilder)
         {
-			onAllProcessSuccess?.Invoke(exitCodes);
+			onAllProcessSuccess?.Invoke(exitCodes, outputStringBuilder);
         }
 
 		public virtual void Init()
@@ -497,7 +553,7 @@ namespace JoshKery.York.AudioRecordingBooth
 			public Action<Exception> onFailWrapper;
 			public Action onSuccessWrapper;
 			public Action onFirstProcessStartedWrapper;
-			public Action<int[]> onAllProcessFinishedWrapper;
+			public Action<int[], StringBuilder> onAllProcessFinishedWrapper;
 
 			/// <summary>
 			/// Cancellation token for ExternalProcessAction Task.

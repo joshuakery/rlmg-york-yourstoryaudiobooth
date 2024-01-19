@@ -47,7 +47,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
                     RLMGLogger.Instance.Log(
                         string.Format(
-                            "Requested microphone not found: {0}\nAvailable audio input devices:\n{1}",
+                            "Requested microphone not found: {0}\nAvailable audio input devices:\n - {1}",
                             MicrophoneName,
                             string.Join("\n - ", Microphone.devices)
                         ),

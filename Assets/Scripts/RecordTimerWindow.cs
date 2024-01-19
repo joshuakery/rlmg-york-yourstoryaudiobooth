@@ -48,7 +48,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void OnFirstProcessStarted()
         {
-            Open();
+            _Open(SequenceType.Insert, 0f);
         }
 
         private void CloseOnFail(System.Exception e)

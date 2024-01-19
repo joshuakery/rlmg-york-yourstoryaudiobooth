@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Threading.Tasks;
 using System;
+using System.Text;
 using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
@@ -75,7 +76,7 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
-        protected override void OnAllProcessSuccess(int[] exitCodes)
+        protected override void OnAllProcessSuccess(int[] exitCodes, StringBuilder outputStringBuilder)
         {
             RLMGLogger.Instance.Log(
                 "All finished trim.",
@@ -90,7 +91,12 @@ namespace JoshKery.York.AudioRecordingBooth
                 );
             }
 
-            base.OnAllProcessSuccess(exitCodes);
+            RLMGLogger.Instance.Log(
+                "Process Output:\n - " + outputStringBuilder.ToString(),
+                MESSAGETYPE.INFO
+            );
+
+            base.OnAllProcessSuccess(exitCodes, outputStringBuilder);
 
             if (exitCodes[0] == 0)
                 onTrimSuccess?.Invoke();

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using System.Text;
 using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
@@ -38,12 +39,17 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <summary>
         /// Template for ffmpeg for recording from an audio input device on Windows with overwrite
         /// </summary>
-		private string STARTRECORDINGTEMPLATE = "-f dshow -y -i audio=\"{0}\" {1}";
+		private string STARTRECORDINGTEMPLATE = "-f dshow -y -i audio=\"{0}\" \"{1}\" -loglevel {2}";
 
         /// <summary>
         /// Template to issue to ffmpeg process to exit
         /// </summary>
 		private string STOPRECORDINGTEMPLATE = "q";
+
+        /// <summary>
+        /// Log level applied to ffmpeg process
+        /// </summary>
+        public string Loglevel = "error";
 
         /// <summary>
         /// Backup timeout enforced on the Main Task thread, should this MonoBehaviour be Destroyed.
@@ -151,7 +157,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 Run(
                     new Settings(
                         ProcessFilePath,
-                        string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut),
+                        string.Format(STARTRECORDINGTEMPLATE, deviceName, fileOut, Loglevel),
                         STOPRECORDINGTEMPLATE
                     ),
                     ProcessTimeout
@@ -175,7 +181,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
         /// <param name="onAllProcessFinishedWrapper"></param>
         /// <param name="exitCodes"></param>
-        protected override void OnAllProcessSuccess(int[] exitCodes)
+        protected override void OnAllProcessSuccess(int[] exitCodes, StringBuilder outputStringBuilder)
         {
             //Debug.Log("Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds);
             RLMGLogger.Instance.Log(
@@ -192,7 +198,12 @@ namespace JoshKery.York.AudioRecordingBooth
                 );
             }
 
-            base.OnAllProcessSuccess(exitCodes);
+            RLMGLogger.Instance.Log(
+                "Process Output:\n - " + outputStringBuilder.ToString(),
+                MESSAGETYPE.INFO
+            );
+
+            base.OnAllProcessSuccess(exitCodes, outputStringBuilder);
 
             //The first exit code should be 0 for a successful recording
             //A code like -22 means an error occurred

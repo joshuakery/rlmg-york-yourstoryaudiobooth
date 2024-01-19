@@ -41,6 +41,11 @@ namespace JoshKery.York.AudioRecordingBooth
             /// Measured in seconds, but will be converted to milliseconds
             /// </summary>
             public int checkForMicrophoneInterval = 30;
+
+            /// <summary>
+            /// Log Level to be brought over to ffmpeg processes
+            /// </summary>
+            public string loglevel = "error";
         }
 
         private AttractScreen attractScreen;
@@ -100,6 +105,7 @@ namespace JoshKery.York.AudioRecordingBooth
             {
                 audioRecordingProcess.MicrophoneName = configData.microphoneName;
                 audioRecordingProcess.RecordingDuration = configData.recordingDuration * 1000;
+                audioRecordingProcess.Loglevel = configData.loglevel;
             }
 
             if (deviceMonitor == null)
