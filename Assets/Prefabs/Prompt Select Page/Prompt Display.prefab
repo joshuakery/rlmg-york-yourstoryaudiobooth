@@ -108,6 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   colorChoice: -1
+  overrideAlpha: 0
+  alpha: 255
 --- !u!114 &240400593204986864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,8 +176,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: -30}
-  m_SizeDelta: {x: 640, y: 70}
+  m_AnchoredPosition: {x: 30, y: -60}
+  m_SizeDelta: {x: 640, y: 126.97}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &8497691362009733280
 CanvasRenderer:
@@ -369,6 +371,7 @@ MonoBehaviour:
     onCompleteEvent:
       m_PersistentCalls:
         m_Calls: []
+  directChildWindowsOnly: 1
   childWindows: []
   id: -1
   textDisplay: {fileID: 3332486274260448844}

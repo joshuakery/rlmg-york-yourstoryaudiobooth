@@ -432,6 +432,13 @@ namespace JoshKery.GenericUI.DOTweenHelpers
 
                 switch (sequenceType)
                 {
+                    case SequenceType.CompleteWithDelay:
+                        tween.Pause();
+                        sequence.InsertCallback(offset, () =>
+                        {
+                            tween.Complete();
+                        });
+                        break;
                     case SequenceType.CompleteImmediately:
                         tween.Complete();
                         break;
@@ -573,12 +580,12 @@ namespace JoshKery.GenericUI.DOTweenHelpers
             return _Toggle(SequenceType.Join);
         }
 
-        public virtual Tween OpenIfTrueElseClose(bool doOpen, SequenceType sequenceType = SequenceType.UnSequenced)
+        public virtual Tween OpenIfTrueElseClose(bool doOpen, SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0f)
         {
             if (doOpen)
-                return _Open(sequenceType);
+                return _Open(sequenceType, atPosition);
             else
-                return _Close(sequenceType);
+                return _Close(sequenceType, atPosition);
         }
 
         public virtual void DoToggle()

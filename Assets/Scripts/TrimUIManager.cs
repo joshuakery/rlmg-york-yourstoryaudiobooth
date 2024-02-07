@@ -29,7 +29,6 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void OnClipLoaded()
         {
-            Debug.Log("clip loaded");
             if (audioClipLoader != null)
             {
                 if (minMaxSlider != null)
@@ -37,6 +36,25 @@ namespace JoshKery.York.AudioRecordingBooth
                     minMaxSlider.SetValues(0f, 1f);
                 }
             }
+        }
+
+        /// <summary>
+        /// Formats seconds to HOURS:MM:SS.MILLISECONDS format
+        /// https://stackoverflow.com/questions/463642/how-can-i-convert-seconds-into-hourminutessecondsmilliseconds-time
+        /// </summary>
+        /// <param name="seconds"></param>
+        /// <returns></returns>
+        private string FormatSexagesimal(float seconds)
+        {
+            System.TimeSpan t = System.TimeSpan.FromSeconds(seconds);
+
+            return string.Format(
+                "{0:D2}:{1:D2}:{2:D2}.{3:D3}",
+                t.Hours,
+                t.Minutes,
+                t.Seconds,
+                t.Milliseconds
+            );
         }
 
         /// <summary>
@@ -48,14 +66,10 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (audioTrimProcess != null && audioClipLoader != null && minMaxSlider != null)
             {
-                audioTrimProcess.OnStartTrim(
-                    Mathf.RoundToInt(
-                        minMaxSlider.Values.minValue * (audioClipLoader.CurrentClip.length / 2f)
-                    ).ToString(),
-                    Mathf.RoundToInt(
-                        (minMaxSlider.Values.maxValue - minMaxSlider.Values.minValue) * (audioClipLoader.CurrentClip.length / 2f)
-                    ).ToString()
-                );
+                string seek = FormatSexagesimal(minMaxSlider.Values.minValue * (audioClipLoader.CurrentClip.length / 2f));
+                string duration = FormatSexagesimal((minMaxSlider.Values.maxValue - minMaxSlider.Values.minValue) * (audioClipLoader.CurrentClip.length / 2f));
+
+                audioTrimProcess.OnStartTrim(seek,duration);
             }
         }
     }

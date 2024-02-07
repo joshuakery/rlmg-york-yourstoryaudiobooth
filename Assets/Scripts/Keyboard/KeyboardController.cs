@@ -66,7 +66,6 @@ namespace rlmg.utils
         private void OnEnable()
         {
             EnableKeyboard();
-            SetKeyboardToStartState();
         }
 
         private void OnDisable()
@@ -103,6 +102,7 @@ namespace rlmg.utils
             if (dotcom_key != null) 
                 dotcom_key.GetComponent<Key>().OnKeyPressed += HandleKeyPressed;
 
+            SetKeyboardToStartState();
         }
 
         public void DisableKeyboard()
@@ -141,11 +141,15 @@ namespace rlmg.utils
                 {
                     if (shift_key != null)
                         shift_key.GetComponent<ShiftKey>().ShiftKeyToggle(true, true);
+                    else if (alphanumeric_key != null)
+                        alphanumeric_key.GetComponent<AlphaNumbericToggleKey>().AlphaNumKeyToggle(true, true);
                 }
                 else
                 {
                     if (shift_key != null)
                         shift_key.GetComponent<ShiftKey>().ShiftKeyToggle(false, true);
+                    else if (alphanumeric_key != null)
+                        alphanumeric_key.GetComponent<AlphaNumbericToggleKey>().AlphaNumKeyToggle(true, true);
                 }
             }
             else
@@ -163,14 +167,15 @@ namespace rlmg.utils
             {
                 if (shift_key == null)
                     return;
-
+                
                 if(shift_key.GetComponent<ShiftKey>().isCaps)
                 {
                     for (int i = 0; i < keys.Count; i++)
                     {
                         keys[i].GetComponent<Key>().ShowCapsShiftOn();
                     }
-                } else
+                }
+                else
                 {
                     for (int i = 0; i < keys.Count; i++)
                     {
@@ -244,6 +249,12 @@ namespace rlmg.utils
         {
             if (currentInputField != null)
                 currentInputField.GetComponent<TMP_InputField>().text = "";
+
+            foreach (TMP_InputField inputField in inputFields)
+            {
+                if (inputField != null)
+                    inputField.text = "";
+            }
         }
 
         public void OnInputSwitch(TMP_InputField inputField)

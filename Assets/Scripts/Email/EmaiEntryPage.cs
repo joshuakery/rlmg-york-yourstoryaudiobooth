@@ -34,6 +34,15 @@ namespace JoshKery.York.AudioRecordingBooth
             errorDisplay = FindObjectOfType<EmailErrorDisplay>();
         }
 
+        protected override void OnNewPage(PageManager.Page page)
+        {
+            base.OnNewPage(page);
+
+            if (page == PageManager.Page.PromptSelection)
+                if (emailKeyboard != null)
+                    emailKeyboard.Init();
+        }
+
         protected override Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
             if (errorDisplay != null)
@@ -53,10 +62,21 @@ namespace JoshKery.York.AudioRecordingBooth
 
                 if (doNotSaveSubmitContainer != null)
                     doNotSaveSubmitContainer.SetActive(!mainSubmissionHandler.doSaveData);
-            }
 
-            if (subscribeToggle != null)
-                subscribeToggle.isOn = true;
+                if (subscribeToggle != null)
+                {
+                    if (mainSubmissionHandler.doSaveData)
+                    {
+                        subscribeToggle.isOn = true; //also sets mainSubmissionHandler.doSubscribe
+                        subscribeToggle.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        subscribeToggle.isOn = false; //also sets mainSubmissionHandler.doSubscribe
+                        subscribeToggle.gameObject.SetActive(false);
+                    }
+                }
+            }
 
             return base._Open(sequenceType, atPosition);
         }

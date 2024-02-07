@@ -62,6 +62,15 @@ namespace JoshKery.York.AudioRecordingBooth
                 pageManager.onNewPage -= OnNewPage;
         }
 
+        private void Update()
+        {
+            if (audioSource != null && image != null)
+            {
+                if (!audioSource.isPlaying && image.sprite == playingSprite)
+                    StopAudio();
+            }
+        }
+
         private void OnClick()
         {
             if (audioSource == null) { return; }

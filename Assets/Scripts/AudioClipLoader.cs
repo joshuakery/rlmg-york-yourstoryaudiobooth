@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -74,10 +75,10 @@ namespace JoshKery.York.AudioRecordingBooth
                 {
                     case UnityWebRequest.Result.ConnectionError:
                     case UnityWebRequest.Result.DataProcessingError:
-                        Debug.LogError("Error: " + webRequest.error);
+                        RLMGLogger.Instance.Log("Error loading audio clip at: " + path + "\n" + webRequest.error, MESSAGETYPE.ERROR);
                         break;
                     case UnityWebRequest.Result.ProtocolError:
-                        Debug.LogError("HTTP Error: " + webRequest.error);
+                        RLMGLogger.Instance.Log("HTTP Error loading audio clip at : " + path + "\n" + webRequest.error);
                         break;
                     case UnityWebRequest.Result.Success:
                         clip = DownloadHandlerAudioClip.GetContent(webRequest);

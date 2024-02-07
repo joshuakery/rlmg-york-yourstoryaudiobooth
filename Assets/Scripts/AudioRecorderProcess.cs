@@ -81,6 +81,16 @@ namespace JoshKery.York.AudioRecordingBooth
         }
 
         /// <summary>
+        /// So that objects can listen out for when the recording is first requested to start
+        /// </summary>
+        public delegate void StartRequestedEvent();
+
+        /// <summary>
+        /// Subscribe to this to listen to when the start is requested
+        /// </summary>
+        public StartRequestedEvent onStartRequested;
+
+        /// <summary>
         /// Because the process and Task do not necessarily end as soon as the Unity main thread asks them to
         /// </summary>
         public delegate void StopRequestedEvent();
@@ -109,10 +119,7 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
         public int RecordingDuration = 45000;
 
-        private void OnEnable()
-        {
-            
-        }
+   
 
         /// <summary>
         /// Setup process parameters
@@ -163,6 +170,8 @@ namespace JoshKery.York.AudioRecordingBooth
                     ProcessTimeout
                 );
             }
+
+            onStartRequested?.Invoke();
         }
 
         /// <summary>

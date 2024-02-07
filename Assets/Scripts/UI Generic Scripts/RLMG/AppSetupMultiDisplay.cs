@@ -80,6 +80,11 @@ public class AppSetupMultiDisplay : MonoBehaviour
         }
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        RLMGLogger.Instance.Log("Application Focus Change: " + (focus ? "Has Focus" : "Lost Focus"), MESSAGETYPE.INFO);
+    }
+
     void OnApplicationQuit()
     {
         RLMGLogger.Instance.Log("Application Quit", MESSAGETYPE.INFO);

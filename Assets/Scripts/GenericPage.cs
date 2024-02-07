@@ -8,7 +8,7 @@ namespace JoshKery.York.AudioRecordingBooth
     public class GenericPage : BaseWindow
     {
         [SerializeField]
-        private PageManager.Page pageType;
+        protected PageManager.Page pageType;
 
         private PageManager pageManager;
 
@@ -38,9 +38,9 @@ namespace JoshKery.York.AudioRecordingBooth
         protected virtual void OnNewPage(PageManager.Page page)
         {
             if (page == pageType)
-                Open();
+                Open(0f);
             else
-                Close();
+                Close(0f);
         }
     }
 }

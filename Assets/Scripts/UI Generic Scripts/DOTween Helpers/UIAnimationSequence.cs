@@ -7,6 +7,7 @@ namespace JoshKery.GenericUI.DOTweenHelpers
     [System.Serializable]
     public enum SequenceType
     {
+        CompleteWithDelay = -3,
         CompleteImmediately = -2,
         UnSequenced = -1,
         Join = 0,

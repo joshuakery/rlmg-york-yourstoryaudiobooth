@@ -38,12 +38,21 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public string savedFilePath;
 
+        private string prompt = null;
+
+        private AudioQuestionsPopulator audioQuestionsPopulator;
+
         public delegate void OnSubmissionErrorEvent(string message);
         public OnSubmissionErrorEvent onNameSubmissionError;
         public OnSubmissionErrorEvent onEmailSubmissionError;
 
         public delegate void OnSubmissionSuccessEvent();
         public OnSubmissionSuccessEvent onSubmissionSuccess;
+
+        private void Awake()
+        {
+            audioQuestionsPopulator = FindObjectOfType<AudioQuestionsPopulator>();
+        }
 
         private void OnEnable()
         {
@@ -58,6 +67,9 @@ namespace JoshKery.York.AudioRecordingBooth
                 emailer.onFail += OnEmailSubmissionError;
                 emailer.onSuccess += OnSubmissionSuccess;
             }
+
+            if (audioQuestionsPopulator != null)
+                audioQuestionsPopulator.OnPrompSelected += OnPromptSelected;
                 
         }
 
@@ -74,6 +86,9 @@ namespace JoshKery.York.AudioRecordingBooth
                 emailer.onFail -= OnEmailSubmissionError;
                 emailer.onSuccess -= OnSubmissionSuccess;
             }
+
+            if (audioQuestionsPopulator != null)
+                audioQuestionsPopulator.OnPrompSelected -= OnPromptSelected;
         }
 
         /// <summary>
@@ -158,14 +173,14 @@ namespace JoshKery.York.AudioRecordingBooth
                 }
             }
 
-            // If we ARE sending the data, start the task in another thread.
+            // If we ARE sending the data, send it in a coroutine
             // 
             if (doSendData)
             {
                 Emailer.EmailSettings settings = new Emailer.EmailSettings(
-                    inputEmail, inputFirstName, inputLastName, savedFilePath, doSubscribe
+                    inputEmail, inputFirstName, inputLastName, savedFilePath, doSubscribe, !doSaveData, prompt
                 );
-                emailer.Run(settings);
+                emailer.StartSendEmail(settings);
             }
         }
 
@@ -251,6 +266,11 @@ namespace JoshKery.York.AudioRecordingBooth
         public void SetDoSubscribe(bool value)
         {
             doSubscribe = value;
+        }
+
+        private void OnPromptSelected(string p)
+        {
+            prompt = p;
         }
     }
 }

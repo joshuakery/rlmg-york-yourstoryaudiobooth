@@ -3,36 +3,57 @@ using System.Collections.Generic;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
+using rlmg.logging;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
     public class Emailer : MonoBehaviour
     {
+        /// <summary>
+        /// Settings for sending email.
+        /// </summary>
         public class EmailSettings
         {
+            /// <summary>
+            /// Visitor-input email address
+            /// </summary>
             public string address;
 
             public string firstName;
             public string lastName;
 
+            /// <summary>
+            /// Path to saved recording of visitor
+            /// </summary>
             public string attachmentPath;
 
             public bool doSubscribe;
 
-            public Action<string> onFailWrapper;
-            public Action onSuccessWrapper;
+            /// <summary>
+            /// Visitor response to 13 or older question. Will be inverse of MainSubmissionHandler.doSaveData
+            /// </summary>
+            public bool isMinor;
+
+            /// <summary>
+            /// Visitor-chosen question prompt
+            /// </summary>
+            public string prompt;
             
-            public EmailSettings(string a, string f, string l, string p, bool sub)
+            public EmailSettings(string a, string f, string l, string p, bool sub, bool isM, string pr)
             {
                 address = a;
                 firstName = f;
                 lastName = l;
                 attachmentPath = p;
                 doSubscribe = sub;
+                isMinor = isM;
+                prompt = pr;
             }
         }
-
 
         /// <summary>
         /// Time (in milliseconds) after which email Task will timeout. Passed to task.Wait()
@@ -40,15 +61,24 @@ namespace JoshKery.York.AudioRecordingBooth
         public int EMAILTIMEOUT = 3000;
 
         /// <summary>
-        /// For issuing a cancel command.
+        /// Aux value used to update emailTimeoutWait without recreating every Send
         /// </summary>
-        private CancellationTokenSource currentTokenSource;
+        private int lastTimeout = 0;
 
         /// <summary>
-        /// The Task currently underway.
+        /// Wait before timeout cancels SendEmail POST request
         /// </summary>
-        public Task currentTask;
+        private WaitForSeconds emailTimeoutWait;
 
+        /// <summary>
+        /// SendEmail POST request endpoint
+        /// </summary>
+        public string EMAILAPIENDPOINT = "";
+
+        /// <summary>
+        /// SendEmail POST request bearer token
+        /// </summary>
+        public string TOKEN = "";
         
         public delegate void OnFailEvent(string message);
 
@@ -64,129 +94,108 @@ namespace JoshKery.York.AudioRecordingBooth
         /// </summary>
         public OnSuccessEvent onSuccess;
 
+        /// <summary>
+        /// Is SendEmail coroutine underway? For UI elements watching Emailer
+        /// </summary>
+        public bool isSending = false;
+
+        private void Awake()
+        {
+            emailTimeoutWait = new WaitForSeconds(EMAILTIMEOUT / 1000f);
+            lastTimeout = EMAILTIMEOUT;
+        }
+
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.DownArrow))
-                OnCancelTask();
+                OnCancelSendEmail();
         }
 
         /// <summary>
         /// Signals core email Action to cancel gracefully.
         /// </summary>
-        public void OnCancelTask()
+        public void OnCancelSendEmail()
         {
-            if (currentTokenSource != null)
-            {
-                UnityEngine.Debug.Log("Cancelling email...");
-                currentTokenSource.Cancel();
-            }
+            RLMGLogger.Instance.Log("Cancelling send email...", MESSAGETYPE.INFO);
+            StopSendEmail();
         }
 
         /// <summary>
-        /// Runs Main email Task.
-        /// Sets up cancellation token.
-        /// Sets up synchronization context for callback events.
+        /// 
         /// </summary>
-        /// <param name="settings"></param>
-        public void Run(EmailSettings settings)
+        private void StopSendEmail()
         {
-            var syncContext = SynchronizationContext.Current;
-            settings.onFailWrapper = new Action<string>(message => syncContext.Post(_ => onFail(message), null));
-            settings.onSuccessWrapper = new Action(() => syncContext.Post(_ => onSuccess(), null));
-
-            currentTokenSource = new CancellationTokenSource();
-
-            currentTask = Task.Run( () => Main(settings, currentTokenSource.Token), currentTokenSource.Token );
+            StopAllCoroutines();
+            isSending = false;
         }
 
         /// <summary>
-        /// Main email task.
-        /// Wraps around core Action and handles exceptions and success.
+        /// Starts SendEmail coroutine.
         /// </summary>
         /// <param name="settings"></param>
-        private void Main(EmailSettings settings, CancellationToken ctoken)
+        public void StartSendEmail(EmailSettings settings)
         {
-            Task mainTask = Task.Run(() => SendEmail(settings, ctoken), ctoken);
-
-            try
-            {
-                if (!mainTask.Wait(EMAILTIMEOUT, ctoken))
-                {
-                    //Signal to cancel
-                    currentTokenSource.Cancel();
-
-                    //Now that we've cancelled, wait for the task to elegantly complete.
-                    mainTask.Wait();
-
-                    throw new TimeoutException();
-                }
-                else
-                {
-                    settings.onSuccessWrapper();
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                Debug.LogError(e.ToString());
-                settings.onFailWrapper("Email cancelled.");
-            }
-            catch (AggregateException e)
-            {
-                Debug.LogError(e.ToString());
-                if (e.InnerException.GetType() == typeof(TaskCanceledException))
-                {
-                    settings.onFailWrapper("Email cancelled.");
-                }
-                else
-                {
-                    settings.onFailWrapper("An unknown error occurred while sending the email.");
-                }
-            }
-            catch (TimeoutException e)
-            {
-                Debug.LogError(e.ToString());
-                settings.onFailWrapper("Sending the email timed out.");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-                settings.onFailWrapper("An unknown error occurred while sending the email.");
-            }
-            finally
-            {
-                currentTokenSource.Dispose();
-            }
+            StopSendEmail();
+            StartCoroutine(Timeout());
+            StartCoroutine(SendEmail(settings));
         }
 
         /// <summary>
-        /// Core email Action
-        /// with graceful cancellation
+        /// Creates POST Multipart Form and sends UnityWebRequest
         /// </summary>
-        /// <param name="settings"></param>
-        /// <param name="token"></param>
-        private void SendEmail(EmailSettings settings, CancellationToken token)
+        /// <param name="settings">Used to create form</param>
+        /// <returns></returns>
+        private IEnumerator SendEmail(EmailSettings settings)
         {
-            if (token.IsCancellationRequested)
+            isSending = true;
+
+            var form = new List<IMultipartFormSection>
+                        {
+                            new MultipartFormFileSection( "audio",      File.ReadAllBytes( settings.attachmentPath), Path.GetFileName(settings.attachmentPath), "audio/mpeg" ),
+                            new MultipartFormDataSection( "email",      Encoding.ASCII.GetBytes( settings.address ) ),
+                            new MultipartFormDataSection( "question",   Encoding.ASCII.GetBytes( settings.prompt ) ),
+                            new MultipartFormDataSection( "isMinor",    Encoding.ASCII.GetBytes( settings.isMinor ? "true" : "false" ) )
+                        };
+
+            UnityWebRequest request = UnityWebRequest.Post(EMAILAPIENDPOINT, form);
+
+            request.SetRequestHeader("Authorization", "Bearer " + TOKEN);
+
+            yield return request.SendWebRequest();
+
+            if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Email cancelled before it got started.");
-                token.ThrowIfCancellationRequested();
+                RLMGLogger.Instance.Log(request.error.ToString() + "\n" + request.downloadHandler.text, MESSAGETYPE.ERROR);
+                onFail?.Invoke(request.error.ToString() + "\n" + request.downloadHandler.text);
+            }
+            else
+            {
+                RLMGLogger.Instance.Log(String.Format("Email completed. Response: {0}", request.downloadHandler.text), MESSAGETYPE.INFO);
+                onSuccess?.Invoke();
             }
 
-            // todo replace with actual email sending
-            for (int i=0; i<2; i++)
+            isSending = false;
+
+            // Stop the timeout coroutine
+            StopAllCoroutines();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator Timeout()
+        {
+            if (lastTimeout != EMAILTIMEOUT)
             {
-                if (token.IsCancellationRequested)
-                {
-                    Debug.LogError("Email cancelled while underway.");
-                    token.ThrowIfCancellationRequested();
-                }
-                
-                Thread.Sleep(500);
+                emailTimeoutWait = new WaitForSeconds(EMAILTIMEOUT / 1000f);
+                lastTimeout = EMAILTIMEOUT;
             }
 
-            //throw new Exception();
+            yield return emailTimeoutWait;
 
-            Debug.Log("Email completed.");
+            RLMGLogger.Instance.Log("Email timeout. Cancelling send email...", MESSAGETYPE.ERROR);
+            StopSendEmail();
         }
     }
 }

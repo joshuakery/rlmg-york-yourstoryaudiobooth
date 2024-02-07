@@ -28,7 +28,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 audioQuestionsPopulator.OnPrompSelected -= OnPromptSelected;
         }
 
-        private void OnPromptSelected()
+        private void OnPromptSelected(string p)
         {
             if (textDisplay != null)
                 if (audioQuestionsPopulator != null)

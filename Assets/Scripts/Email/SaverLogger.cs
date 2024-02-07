@@ -9,7 +9,7 @@ namespace JoshKery.York.AudioRecordingBooth
     public class SaverLogger : MonoBehaviour
     {
         [SerializeField]
-        private string INFILENAME = "out.mp3";
+        private string INFILENAME = "out-trimmed.mp3";
 
         public string OUTDIRECTORY = "recordings";
 

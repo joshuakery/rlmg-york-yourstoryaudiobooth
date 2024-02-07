@@ -57,11 +57,11 @@ namespace rlmg.utils
         {
             if (_toggle)
             {
-                key_symbol.GetComponent<TextMeshProUGUI>().text = "123";
+                key_symbol.GetComponent<TextMeshProUGUI>().text = key_ids[0];
             }
             else
             {
-                key_symbol.GetComponent<TextMeshProUGUI>().text = "ABC";
+                key_symbol.GetComponent<TextMeshProUGUI>().text = key_ids[1];
             }
         }
     }

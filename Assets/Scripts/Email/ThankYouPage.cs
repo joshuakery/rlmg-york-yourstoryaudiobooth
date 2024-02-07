@@ -30,6 +30,21 @@ namespace JoshKery.York.AudioRecordingBooth
 
             return base._Open(sequenceType, atPosition);
         }
+
+        protected override void OnNewPage(PageManager.Page page)
+        {
+            if (page == pageType)
+                Open();
+            else
+            {
+                if (page == PageManager.Page.PromptSelection)
+                {
+                    _Close(SequenceType.CompleteWithDelay, 1f);
+                }
+                else
+                    Close();
+            }
+        }
     }
 }
 

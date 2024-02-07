@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+//todo bug - need to reload the min and max of the slider like for the trim manager on clip loaded
+//also maybe the visualization window needs to be closed or reset or something
 namespace JoshKery.York.AudioRecordingBooth
 {
     /// <summary>

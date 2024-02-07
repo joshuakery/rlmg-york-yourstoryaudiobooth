@@ -12,20 +12,7 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private AudioQuestionsLoader contentLoader;
 
-        private AudioQuestionsWrapper audioQuestionsWrapper;
-        public AudioQuestionsWrapper AudioQuestionsWrapper
-        {
-            get { return audioQuestionsWrapper; }
-            set
-            {
-                audioQuestionsWrapper = value;
-
-                if (audioQuestionsWrapper.AudioQuestions != null)
-                    audioQuestionsDict = audioQuestionsWrapper.AudioQuestions.ToDictionary(q => q.id);
-            }
-        }
-
-        private Dictionary<int, AudioQuestion> audioQuestionsDict;
+        public GraphQLResponseWrapper ResponseWrapper;
 
         public int SelectedPrompt = -1;
 
@@ -33,19 +20,14 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             get
             {
-                if (AudioQuestionsWrapper?.AudioQuestions != null &&
-                    AudioQuestionsWrapper.AudioQuestions.Count > 0 &&
-                    audioQuestionsDict != null &&
-                    audioQuestionsDict.ContainsKey(SelectedPrompt))
-                {
-                    return audioQuestionsDict[SelectedPrompt].text;
-                }
+                if (ResponseWrapper?.data?.audioQuestions != null)
+                    return ResponseWrapper.data.audioQuestions.GetPrompt(SelectedPrompt);
                 else
                     return null;
             }
         }
 
-        public delegate void PromptSelectedEvent();
+        public delegate void PromptSelectedEvent(string text);
         public PromptSelectedEvent OnPrompSelected;
 
         protected override void OnEnable()
@@ -74,34 +56,37 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             yield return null;
 
-            AudioQuestionsWrapper = JsonConvert.DeserializeObject<AudioQuestionsWrapper>(text);
+            ResponseWrapper = JsonConvert.DeserializeObject<GraphQLResponseWrapper>(text);
 
             SetPrompts();
         }
 
         private void SetPrompts()
         {
-            if (AudioQuestionsWrapper == null || AudioQuestionsWrapper.AudioQuestions.Count == 0) { return; }
+            if (ResponseWrapper?.data?.audioQuestions == null) { return; }
 
             ClearAllDisplays();
 
-            foreach (AudioQuestion question in AudioQuestionsWrapper.AudioQuestions)
+            for (int i=0; i<6; i++)
             {
                 PromptDisplay promptDisplay = InstantiateDisplay<PromptDisplay>();
 
                 if (promptDisplay != null)
                 {
-                    promptDisplay.SetContent(question);
+                    promptDisplay.SetContent(ResponseWrapper.data.audioQuestions.GetPrompt(i));
                     promptDisplay.onPromptSelected += OnPromptSelected;
                 }
             }
         }
 
-        private void OnPromptSelected(int id)
+        private void OnPromptSelected(string id)
         {
-            SelectedPrompt = id;
+            if (ResponseWrapper?.data?.audioQuestions != null)
+                SelectedPrompt = ResponseWrapper.data.audioQuestions.GetIndex(id);
+            else
+                SelectedPrompt = -1;
 
-            OnPrompSelected?.Invoke();
+            OnPrompSelected?.Invoke(id);
         }
 
         private void OnPopulateContentFinish()

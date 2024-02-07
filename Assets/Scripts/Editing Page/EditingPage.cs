@@ -61,14 +61,15 @@ namespace JoshKery.York.AudioRecordingBooth
                 playbackUIManager.Init();
             }
 
-            if (playbackTrimSwitchManager != null)
-            {
-                playbackTrimSwitchManager.Switch(true);
-            }
-
             if (trimSlider != null)
             {
                 trimSlider.SetValues(0, 1);
+            }
+
+            // Must call this after resetting trimSlider as it will reset the playback slider values accordingly
+            if (playbackTrimSwitchManager != null)
+            {
+                playbackTrimSwitchManager.Switch(true);
             }
 
             if (volumeSlider != null)

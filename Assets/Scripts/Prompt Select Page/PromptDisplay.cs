@@ -9,10 +9,10 @@ namespace JoshKery.York.AudioRecordingBooth
 {
     public class PromptDisplay : BaseWindow
     {
-        public delegate void PromptSelectEvent(int id);
+        public delegate void PromptSelectEvent(string id);
         public PromptSelectEvent onPromptSelected;
 
-        public int id = -1;
+        public string id = null;
 
         [SerializeField]
         private TMP_Text textDisplay;
@@ -41,12 +41,12 @@ namespace JoshKery.York.AudioRecordingBooth
             onPromptSelected?.Invoke(id);
         }
 
-        public void SetContent(AudioQuestion question)
+        public void SetContent(string question)
         {
-            id = question.id;
+            id = question;
 
             if (textDisplay != null)
-                textDisplay.text = AddNoBreakTagsToLastTwoWords(question.text);
+                textDisplay.text = AddNoBreakTagsToLastTwoWords(question);
         }
 
         private string AddNoBreakTagsToLastTwoWords(string text)

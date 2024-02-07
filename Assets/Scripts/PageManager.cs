@@ -1,8 +1,8 @@
+using DG.Tweening;
+using JoshKery.GenericUI.DOTweenHelpers;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI.Extensions;
 using UnityEngine.UI;
-using JoshKery.GenericUI.DOTweenHelpers;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
@@ -34,7 +34,13 @@ namespace JoshKery.York.AudioRecordingBooth
         private AudioTrimProcess audioTrimProcess;
 
         [SerializeField]
+        private UISequenceManager sequenceManager;
+
+        [SerializeField]
         private Button reRecordButton;
+
+        [SerializeField]
+        private BaseStateMachine recordingEditingWindow;
 
         [SerializeField]
         private BaseWindow recordingEditingFooterWindow;
@@ -78,6 +84,8 @@ namespace JoshKery.York.AudioRecordingBooth
         public delegate void OnNewPageEvent(Page page);
         public OnNewPageEvent onNewPage;
 
+        private IEnumerator recordingSuccessCoroutine;
+
         private void Awake()
         {
             contentLoader = FindObjectOfType<AudioQuestionsLoader>();
@@ -85,7 +93,7 @@ namespace JoshKery.York.AudioRecordingBooth
             audioRecorderProcess = FindObjectOfType<AudioRecorderProcess>();
             audioTrimProcess = FindObjectOfType<AudioTrimProcess>();
 
-            doneEditingButtonWindow = doneEditingButton.gameObject.GetComponent<BaseWindow>();
+            //doneEditingButtonWindow = doneEditingButton.gameObject.GetComponent<BaseWindow>();
 
             mainSubmissionHandler = FindObjectOfType<MainSubmissionHandler>();
 
@@ -94,6 +102,8 @@ namespace JoshKery.York.AudioRecordingBooth
             closeAgeEmailNameContainerButtonWindow = closeAgeEmailNameContainerButton.gameObject.GetComponent<BaseWindow>();
 
             attractLoop = FindObjectOfType<AttractLoop>();
+
+            recordingSuccessCoroutine = null;
         }
 
         private void OnEnable()
@@ -107,12 +117,16 @@ namespace JoshKery.York.AudioRecordingBooth
 
             // Prompt Selection Page
             if (audioQuestionsPopulator != null)
-                audioQuestionsPopulator.OnPrompSelected += OpenRecordingPage;
+                audioQuestionsPopulator.OnPrompSelected += OnPromptSelected;
 
 
             //Recording Page
             if (audioRecorderProcess != null)
+            {
                 audioRecorderProcess.onRecordingSuccess += OnRecordingSuccess;
+                audioRecorderProcess.onStartRequested += OnRecordingStartRequested;
+            }
+                
 
 
             //Editing Page
@@ -173,12 +187,15 @@ namespace JoshKery.York.AudioRecordingBooth
 
             // Prompt Selection Page
             if (audioQuestionsPopulator != null)
-                audioQuestionsPopulator.OnPrompSelected -= OpenRecordingPage;
+                audioQuestionsPopulator.OnPrompSelected -= OnPromptSelected;
 
 
             // Recording Page
             if (audioRecorderProcess != null)
+            {
                 audioRecorderProcess.onRecordingSuccess -= OnRecordingSuccess;
+                audioRecorderProcess.onStartRequested -= OnRecordingStartRequested;
+            }
 
 
             // Editing Page
@@ -230,21 +247,44 @@ namespace JoshKery.York.AudioRecordingBooth
             OpenPage(Page.PromptSelection);
         }
 
+        private void OnPromptSelected(string p)
+        {
+            OpenPage(Page.Recording);
+        }
+
         private void OpenRecordingPage()
         {
             OpenPage(Page.Recording);
         }
 
+        private void OnRecordingStartRequested()
+        {
+            if (recordingSuccessCoroutine != null)
+            {
+                StopCoroutine(recordingSuccessCoroutine);
+                recordingSuccessCoroutine = null;
+            }
+        }
+
         private void OnRecordingSuccess()
         {
-            //OpenPage(Page.Editing);
-            StartCoroutine(OnRecordingSucessCo());
+            if (recordingSuccessCoroutine != null)
+            {
+                StopCoroutine(recordingSuccessCoroutine);
+                recordingSuccessCoroutine = null;
+            }
+
+            recordingSuccessCoroutine = OnRecordingSucessCo();
+            StartCoroutine(recordingSuccessCoroutine);
         }
 
         private IEnumerator OnRecordingSucessCo()
         {
             yield return new WaitForSeconds(1.2f);
+
             OpenPage(Page.Editing);
+
+            recordingSuccessCoroutine = null;
         }
 
         private void OnTrimSucess()
@@ -310,14 +350,61 @@ namespace JoshKery.York.AudioRecordingBooth
             bool isRecordingOrEditing = (page == Page.Recording || page == Page.Editing);
             bool isAgeEmailOrName = (page == Page.AgeSelection || page == Page.EmailEntry || page == Page.NameEntry);
 
+            if (recordingEditingWindow != null)
+            {
+                switch (page)
+                {
+                    case Page.PromptSelection:
+                        if (CurrentPage == Page.Editing)
+                        {
+                            // go to Recording position for animation elegance
+                            Tween tween = recordingEditingWindow.StateMachineAction(1, SequenceType.Insert, 0);
+                            recordingEditingWindow.StateMachineAction(0, SequenceType.CompleteWithDelay, tween.Duration());
+                        }  
+                        else if (CurrentPage == Page.ThankYou)
+                        {
+                            recordingEditingWindow.StateMachineAction(0, SequenceType.CompleteWithDelay, 1f);
+                        }
+                        else
+                        {
+                            recordingEditingWindow.StateMachineAction(0, SequenceType.Insert, 0);  // go to Prompt position
+                        }  
+                        break;
+
+                    case Page.Recording:
+                        recordingEditingWindow.StateMachineAction(1, SequenceType.Insert, 0); // go to Recording position
+                        break;
+
+                    case Page.Editing:
+                        recordingEditingWindow.StateMachineAction(2, SequenceType.Insert, 0); // go to Editing position
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
             if (recordingEditingFooterWindow != null)
-                recordingEditingFooterWindow.OpenIfTrueElseClose(isRecordingOrEditing);
+            {
+                if (CurrentPage == Page.ThankYou && page == Page.PromptSelection)
+                    recordingEditingFooterWindow.OpenIfTrueElseClose(!(page == Page.PromptSelection), SequenceType.CompleteWithDelay, 1f);
+                else
+                    recordingEditingFooterWindow.OpenIfTrueElseClose(!(page == Page.PromptSelection), SequenceType.UnSequenced);
+
+            }
+                
 
             if (doneEditingButtonWindow != null)
                 doneEditingButtonWindow.OpenIfTrueElseClose(page == Page.Editing);
 
             if (ageEmailNameContainerWindow != null)
-                ageEmailNameContainerWindow.OpenIfTrueElseClose(isAgeEmailOrName || page == Page.ThankYou);
+            {
+                if (CurrentPage == Page.ThankYou && page == Page.PromptSelection)
+                    ageEmailNameContainerWindow.OpenIfTrueElseClose(isAgeEmailOrName || page == Page.ThankYou, SequenceType.CompleteWithDelay, 1f);
+                else
+                    ageEmailNameContainerWindow.OpenIfTrueElseClose(isAgeEmailOrName || page == Page.ThankYou);
+            }
+                
 
             if (closeAgeEmailNameContainerButtonWindow != null)
                 closeAgeEmailNameContainerButtonWindow.OpenIfTrueElseClose(isAgeEmailOrName);

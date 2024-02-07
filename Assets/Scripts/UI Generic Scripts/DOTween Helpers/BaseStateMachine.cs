@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using DG.Tweening;
@@ -81,6 +82,7 @@ namespace JoshKery.GenericUI.DOTweenHelpers
         #endregion
 
         #region Generic State Machine Action methods
+
         protected virtual Sequence _StateMachineAction(
             UIAnimationSequenceData sequenceData,
             SequenceType sequenceType = SequenceType.UnSequenced,
@@ -91,28 +93,17 @@ namespace JoshKery.GenericUI.DOTweenHelpers
                 return null;
 
             Sequence sequence = GetSequence(sequenceData, gameObject);
-            switch (sequenceType)
-            {
-                case (SequenceType.CompleteImmediately):
-                    sequence.Complete();
-                    break;
-                case (SequenceType.UnSequenced):
-                    break;
-                case (SequenceType.Join):
-                    sequenceManager.JoinTween(sequence);
-                    break;
-                case (SequenceType.Append):
-                    sequenceManager.AppendTween(sequence);
-                    break;
-                case (SequenceType.Insert):
-                    sequenceManager.InsertTween(atPosition, sequence);
-                    break;
-                case (SequenceType.BackInsert):
-                    sequenceManager.InsertTween(sequenceManager.currentSequence.Duration() - atPosition, sequence);
-                    break;
-            }
-            return sequence;
 
+            if (sequenceManager != null)
+            {
+                //Make sure that we pass a non-null sequence to AttachTweenToSequence
+                sequenceManager.CreateSequenceIfNull();
+
+                //Do the work of attaching
+                AttachTweenToSequence(sequenceType, sequence, sequenceManager.currentSequence, false, atPosition, null);
+            }
+
+            return sequence;
         }
 
         public virtual Tween StateMachineAction(int index, SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0f)
@@ -333,6 +324,13 @@ namespace JoshKery.GenericUI.DOTweenHelpers
 
                 switch (sequenceType)
                 {
+                    case SequenceType.CompleteWithDelay:
+                        tween.Pause();
+                        sequence.InsertCallback(offset, () =>
+                        {
+                            tween.Complete();
+                        });
+                        break;
                     case SequenceType.CompleteImmediately:
                         tween.Complete();
                         break;

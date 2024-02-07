@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0541e0979f7273943ae0cd65bcb28c03, type: 3}
+  m_Name: ShaderResources
+  m_EditorClassIdentifier: 
+  shaders:
+  - {fileID: 4800000, guid: b66ad1849c3f27248b653ca538510815, type: 3}
+  - {fileID: 4800000, guid: 6323381cfcaad364e9931cd69ef464e8, type: 3}
+  - {fileID: 4800000, guid: 3115af95d6b576942b5e9eeecc3e2ac3, type: 3}
+  - {fileID: 4800000, guid: c11f6ca786893f44b9a975dd9e0ff700, type: 3}
+  - {fileID: 4800000, guid: 82267be2e213fc743bf530369f85237c, type: 3}
+  - {fileID: 4800000, guid: 84dfbdf8359138f4695165f28ad97f4e, type: 3}
+  - {fileID: 4800000, guid: 719420595c445f84fa09bedfb1d9e0de, type: 3}
+  - {fileID: 4800000, guid: 5662cfbe76eb22746b476994e8ae959d, type: 3}
+  additionalPaths: []

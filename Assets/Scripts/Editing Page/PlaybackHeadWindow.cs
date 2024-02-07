@@ -90,7 +90,7 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private void OnValueChanged(float value)
         {
-            if (audioSource != null && timeDisplay != null)
+            if (audioSource?.clip != null && audioSource.clip.length > 0 && timeDisplay != null)
             {
                 // Fix for bug where clip length is double
                 float time = value * (audioSource.clip.length / 2f);
@@ -98,7 +98,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 TimeSpan timeSpan = TimeSpan.FromSeconds(time);
 
                 timeDisplay.text = string.Format(
-                    "<mspace=0.55em>{0}</mspace>:<mspace=0.55em>{1}</mspace>",
+                    "<mspace=0.7em>{0}</mspace>:<mspace=0.7em>{1}</mspace>",
                     timeSpan.ToString("mm"),
                     timeSpan.ToString("ss")
                 );

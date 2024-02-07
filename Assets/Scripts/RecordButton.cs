@@ -71,16 +71,12 @@ namespace JoshKery.York.AudioRecordingBooth
             {
                 if (!process.isRunning)
                 {
-                    Debug.Log("start");
-
                     ToggleSprite(true);
 
                     process.OnStartRecording();
                 }
                 else
                 {
-                    Debug.Log("stop");
-
                     ToggleSprite(false);
 
                     process.OnStopRecording();

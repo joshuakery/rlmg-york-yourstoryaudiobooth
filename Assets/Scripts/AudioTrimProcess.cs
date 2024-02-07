@@ -28,7 +28,7 @@ namespace JoshKery.York.AudioRecordingBooth
 		private const string FFMPEG = "ffmpeg.exe";
 
         /// <summary>
-        /// Template for ffmpeg for recording from an audio input device on Windows with overwrite
+        /// Template for ffmpeg for trimming
         /// </summary>
 		private string DOTRIMTEMPLATE = "-ss {0} -t {1} -y -i \"{2}\" -acodec copy \"{3}\" ";
 

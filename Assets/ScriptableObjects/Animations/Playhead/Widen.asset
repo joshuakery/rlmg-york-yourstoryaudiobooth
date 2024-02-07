@@ -15,7 +15,7 @@ MonoBehaviour:
   animationType: 5
   duration: 0.25
   delay: 0
-  to: {x: 80, y: 40, z: 0}
+  to: {x: 100, y: 40, z: 0}
   useFrom: 0
   trueFrom: 0
   setToFromImmediately: 0

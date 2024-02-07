@@ -10,6 +10,8 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private PlaybackUIManager playbackManager;
 
+        private PlaybackTrimSwitchManager switchManager;
+
         [SerializeField]
         private Button button;
 
@@ -22,6 +24,11 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private Sprite pauseSprite;
 
+        private void Awake()
+        {
+            switchManager = FindObjectOfType<PlaybackTrimSwitchManager>();
+        }
+
         private void OnEnable()
         {
             if (playbackManager != null)
@@ -31,6 +38,12 @@ namespace JoshKery.York.AudioRecordingBooth
 
                 playbackManager.onPlay += OnPlay;
                 playbackManager.onPause += OnPause;
+            }
+
+            if (switchManager != null)
+            {
+                switchManager.onPlayback += OnSwitchToPlayback;
+                switchManager.onTrim += OnSwitchToTrim;
             }
                 
         }
@@ -45,7 +58,12 @@ namespace JoshKery.York.AudioRecordingBooth
                 playbackManager.onPlay -= OnPlay;
                 playbackManager.onPause -= OnPause;
             }
-                
+
+            if (switchManager != null)
+            {
+                switchManager.onPlayback -= OnSwitchToPlayback;
+                switchManager.onTrim -= OnSwitchToTrim;
+            }
         }
 
         private void OnPlay()
@@ -58,6 +76,18 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (image != null)
                 image.sprite = pauseSprite;
+        }
+
+        private void OnSwitchToPlayback()
+        {
+            if (button != null)
+                button.interactable = true;
+        }
+
+        private void OnSwitchToTrim()
+        {
+            if (button != null)
+                button.interactable = false;
         }
 
 

@@ -49,6 +49,18 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
+
+        private string PRESSRECORDTOBEGINTEXT = "Press Record\nto Begin";
+
+        private string RECORDINGNOWTEMPLATE = "Speak for {0}\nseconds or less";
+
+        private string COUNTDOWNTEMPLATE = "<mspace=0.65em>{0}</mspace> seconds left";
+
+        private string SUCCESSFULRECORDINGTEXT = "Great!";
+
+        private string ERRORTEXT = "Oops!\nSomething went wrong.\nPlease try again.";
+
+
         protected override void Awake()
         {
             base.Awake();
@@ -94,13 +106,13 @@ namespace JoshKery.York.AudioRecordingBooth
         private void OnFirstProcessStarted()
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse();
         }
 
         private void OnFail(System.Exception e)
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse();
         }
 
         
@@ -108,24 +120,27 @@ namespace JoshKery.York.AudioRecordingBooth
         private void OnStopRequested()
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse();
         }
         private void OnRecordingError()
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse();
         }
 
         private void OnRecordingSuccess()
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse();
         }
 
         private void OnInit()
         {
             doCountdownTextInUpdate = false;
-            PulseUnsequenced();
+            Pulse(SequenceType.CompleteImmediately);
+
+            //Do this afterward, as the SessionManager hasn't necessarily updated yet with the Init
+            textDisplay.text = PRESSRECORDTOBEGINTEXT;
         }
 
         private void Update()
@@ -136,7 +151,7 @@ namespace JoshKery.York.AudioRecordingBooth
                 {
                     //Pulse animation if switching to countdown
                     if (secondsRemaining == STARTCOUNTDOWNAT && countLastFrame != STARTCOUNTDOWNAT)
-                        PulseUnsequenced();
+                        Pulse();
 
                     //Update countLastFrame
                     countLastFrame = secondsRemaining;
@@ -150,7 +165,10 @@ namespace JoshKery.York.AudioRecordingBooth
                     {
                         if (doCountdownTextInUpdate)
                         {
-                            textDisplay.text = string.Format("{0} seconds left", secondsRemaining);
+                            textDisplay.text = string.Format(
+                                COUNTDOWNTEMPLATE,
+                                secondsRemaining >= 10 ? secondsRemaining : " " + secondsRemaining
+                            );
                         }
                     }
 
@@ -158,12 +176,14 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
-        public void PulseUnsequenced()
+
+
+        public void Pulse(SequenceType sequenceType = SequenceType.UnSequenced)
         {
-            _PulseUnsequenced();
+            _Pulse(sequenceType);
         }
 
-        private void _PulseUnsequenced()
+        private void _Pulse(SequenceType sequenceType = SequenceType.UnSequenced)
         {
             Sequence overallWrapper = DOTween.Sequence();
 
@@ -187,6 +207,11 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (openTween != null)
                 overallWrapper.Append(openTween);
+
+            if (sequenceType == SequenceType.CompleteImmediately)
+                overallWrapper.Complete();
+
+            //todo attach to main sequence
         }
 
         private void OnPulseMiddle()
@@ -198,11 +223,11 @@ namespace JoshKery.York.AudioRecordingBooth
                     switch (sessionManager.state)
                     {
                         case (RecordingSession.State.NotYetStarted):
-                            textDisplay.text = "Press Record to Begin";
+                            textDisplay.text = PRESSRECORDTOBEGINTEXT;
                             break;
                         case (RecordingSession.State.RecordingNow):
                             textDisplay.text = string.Format(
-                                "Speak for {0} seconds or less",
+                                RECORDINGNOWTEMPLATE,
                                 Mathf.RoundToInt(process.RecordingDuration / 1000f)
                             );
                             //Update may override this text if it's time to countdown
@@ -210,10 +235,10 @@ namespace JoshKery.York.AudioRecordingBooth
                             break;
                         case (RecordingSession.State.CompletedRecording):
                         case (RecordingSession.State.SuccessfulRecording):
-                            textDisplay.text = "Great!";
+                            textDisplay.text = SUCCESSFULRECORDINGTEXT;
                             break;
                         case RecordingSession.State.Error:
-                            textDisplay.text = "Oops! Something went wrong. Please try again.";
+                            textDisplay.text = ERRORTEXT;
                             break;
                         default:
                             textDisplay.text = "";

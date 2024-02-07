@@ -577,6 +577,7 @@ GameObject:
   - component: {fileID: 7476906219854977602}
   - component: {fileID: 7391803955245513850}
   - component: {fileID: 5398237855583472408}
+  - component: {fileID: 1859630604765044716}
   m_Layer: 5
   m_Name: input_clear
   m_TagString: Untagged
@@ -713,7 +714,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -732,6 +733,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1859630604765044716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5662286939504580010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83bf62ce3cee38241aceed3d6eb37132, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 3696840654651230243}
+  icon: {fileID: 5934109818746020362}
 --- !u!1 &7467314109530753217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1074,15 +1089,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: First Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
-  m_sharedMaterial: {fileID: -2360607312563360046, guid: 59e46454b7a33864398ecdcd0a18f7b5, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 0d91257ac73314b4789714fe4090025d, type: 2}
+  m_sharedMaterial: {fileID: -487373398374443505, guid: 0d91257ac73314b4789714fe4090025d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 2150773298
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0.5}
+    rgba: 4282462739
+  m_fontColor: {r: 0.07450981, g: 0.19607843, b: 0.25490198, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1105,7 +1120,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 2
+  m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1168,12 +1183,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8636526696542586128}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a103336669fe14a7fa57547f83a3d28f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skinData: {fileID: 0}
+  skinData: {fileID: 11400000, guid: d87f81bd689748744b598047d8d818cb, type: 2}
   screenType: 1
   headingType: 9
   fontColor: 1

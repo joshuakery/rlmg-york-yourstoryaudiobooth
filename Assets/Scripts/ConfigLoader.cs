@@ -27,6 +27,15 @@ namespace JoshKery.York.AudioRecordingBooth
 
             public string apiEndpoint;
 
+            public string emailAPIEndpoint;
+
+            public string emailAPIBearerToken;
+
+            /// <summary>
+            /// Measured in seconds, but will be converted to milliseconds
+            /// </summary>
+            public int emailAPITimeout = 30;
+
             public string sampleStoryFile1;
             public string sampleStoryFile2;
 
@@ -52,6 +61,8 @@ namespace JoshKery.York.AudioRecordingBooth
         private AttractLoop attractLoop;
 
         private AudioQuestionsLoader contentLoader;
+
+        private Emailer emailer;
 
         [SerializeField]
         private AudioClipLoader sampleStoryLoader1;
@@ -88,8 +99,20 @@ namespace JoshKery.York.AudioRecordingBooth
             if (contentLoader != null)
             {
                 //todo set url and query, etc. for graphql request
+                contentLoader.graphQLURL = configData.apiServer + "/" + configData.apiEndpoint;
+                contentLoader.authToken = configData.apiKey;
 
                 contentLoader.LoadContent();
+            }
+
+            if (emailer == null)
+                emailer = FindObjectOfType<Emailer>();
+
+            if (emailer != null)
+            {
+                emailer.EMAILAPIENDPOINT    = configData.apiServer + "/" + configData.emailAPIEndpoint;
+                emailer.EMAILTIMEOUT        = configData.emailAPITimeout * 1000;
+                emailer.TOKEN               = configData.emailAPIBearerToken;
             }
 
             if (sampleStoryLoader1 != null)

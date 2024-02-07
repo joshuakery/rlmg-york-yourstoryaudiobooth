@@ -19,9 +19,7 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (emailer == null) { return; }
 
-            if (emailer.currentTask != null &&
-                !emailer.currentTask.IsCompleted
-                )
+            if (emailer.isSending)
             {
                 if (!isOpen)
                     Open();
