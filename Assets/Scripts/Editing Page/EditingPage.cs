@@ -61,15 +61,15 @@ namespace JoshKery.York.AudioRecordingBooth
                 playbackUIManager.Init();
             }
 
-            if (trimSlider != null)
+/*            if (trimSlider != null)
             {
                 trimSlider.SetValues(0, 1);
-            }
+            }*/
 
             // Must call this after resetting trimSlider as it will reset the playback slider values accordingly
             if (playbackTrimSwitchManager != null)
             {
-                playbackTrimSwitchManager.Switch(true);
+                playbackTrimSwitchManager.Switch(true, true);
             }
 
             if (volumeSlider != null)
@@ -83,6 +83,14 @@ namespace JoshKery.York.AudioRecordingBooth
 
             StartCoroutine(InitCo());
             return base._Open(sequenceType, atPosition);
+        }
+
+        protected override Sequence _Close(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
+        {
+            if (playbackUIManager != null)
+                playbackUIManager.PauseAudio();
+
+            return base._Close(sequenceType, atPosition);
         }
 
         private IEnumerator InitCo()

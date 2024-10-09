@@ -36,7 +36,6 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (contentLoader != null)
             {
-                contentLoader.onPopulateContent += PopulateContent;
                 contentLoader.onPopulateContentFinish.AddListener(OnPopulateContentFinish);
             }   
         }
@@ -47,12 +46,11 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (contentLoader != null)
             {
-                contentLoader.onPopulateContent -= PopulateContent;
                 contentLoader.onPopulateContentFinish.RemoveListener(OnPopulateContentFinish);
             }
         }
 
-        private IEnumerator PopulateContent(string text)
+        public IEnumerator PopulateContent(string text)
         {
             yield return null;
 

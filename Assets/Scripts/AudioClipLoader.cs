@@ -43,9 +43,10 @@ namespace JoshKery.York.AudioRecordingBooth
                 await Reload();
         }
 
-        public async Task Reload()
+        public async Task Reload(string path = null)
         {
-            var path = Path.Combine(Application.streamingAssetsPath, clipFileName);
+            if (string.IsNullOrEmpty(path))
+                path = Path.Combine(Application.streamingAssetsPath, clipFileName);
 
             CurrentClip = await LoadClip(path);
 
@@ -90,12 +91,12 @@ namespace JoshKery.York.AudioRecordingBooth
             return clip;
         }
 
-        public IEnumerator ReloadCo(string fileName = null)
+        public IEnumerator ReloadCo(string fileName = null, string filePath = null)
         {
             if (!string.IsNullOrEmpty(fileName))
                 clipFileName = fileName;
 
-            yield return Reload();
+            yield return Reload(filePath);
         }
     }
 }

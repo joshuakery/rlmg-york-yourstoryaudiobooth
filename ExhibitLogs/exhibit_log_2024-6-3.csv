@@ -1,0 +1,300 @@
+Timestamp, Message
+2024/06/03 14:37:47,Application Focus Change: Has Focus
+2024/06/03 14:37:47,Content loaded successfully! First 50 chars of response: {"data":{"YourStoryAudioBooth":{"question_two":"Wh
+2024/06/03 14:37:47,Saved data to local directory: C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\your_story_audio_booth.json
+2024/06/03 14:37:47,Application Awake - version #1.1.0
+2024/06/03 14:37:47,Primary Display    App (screen dims): 1920 x 1080 (1.777778)   "Current Resolution": 1920 x 1080   Rendering Res: 1920 x 1080   System Res: 1920 x 1080
+2024/06/03 14:37:56,Stop Recording invoked.
+2024/06/03 14:37:57,Finished recording after milliseconds: 4055.5025
+2024/06/03 14:37:57,Exit code: 0
+2024/06/03 14:37:57,Process Output:
+ - 
+2024/06/03 14:38:14,Stop Recording invoked.
+2024/06/03 14:38:15,Finished recording after milliseconds: 9545.5945
+2024/06/03 14:38:15,Exit code: 0
+2024/06/03 14:38:15,Process Output:
+ - 
+2024/06/03 14:38:25,All finished trim.
+2024/06/03 14:38:25,Exit code: 0
+2024/06/03 14:38:25,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:08.54, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.02 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 0000022b2538fdc0] video:0kB audio:54kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.837412%
+[30]: size=      54kB time=00:00:03.40 bitrate= 130.9kbits/s speed=1.1e+03x    
+2024/06/03 14:38:37,Stop Recording invoked.
+2024/06/03 14:38:38,Finished recording after milliseconds: 7526.0511
+2024/06/03 14:38:38,Exit code: 0
+2024/06/03 14:38:38,Process Output:
+ - 
+2024/06/03 14:38:47,All finished trim.
+2024/06/03 14:38:47,Exit code: 0
+2024/06/03 14:38:47,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:06.53, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.02 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000001aca044fdc0] video:0kB audio:64kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 0.699608%
+[30]: size=      65kB time=00:00:04.08 bitrate= 130.4kbits/s speed=1.12e+03x    
+2024/06/03 14:38:54,All finished trim.
+2024/06/03 14:38:54,Exit code: 0
+2024/06/03 14:38:54,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:06.53, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.02 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000001d9257cfdc0] video:0kB audio:18kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.456402%
+[30]: size=      19kB time=00:00:01.12 bitrate= 136.9kbits/s speed=1.06e+03x    
+2024/06/03 14:39:02,All finished trim.
+2024/06/03 14:39:02,Exit code: 0
+2024/06/03 14:39:02,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:06.53, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.01 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000002ad3c10fdc0] video:0kB audio:19kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.351863%
+[30]: size=      20kB time=00:00:01.18 bitrate= 135.6kbits/s speed= 357x    
+2024/06/03 14:39:11,All finished trim.
+2024/06/03 14:39:11,Exit code: 0
+2024/06/03 14:39:11,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:06.53, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.02 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 0000015e30b7fdc0] video:0kB audio:36kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.242002%
+[30]: size=      37kB time=00:00:02.27 bitrate= 132.2kbits/s speed= 878x    
+2024/06/03 14:39:17,All finished trim.
+2024/06/03 14:39:17,Exit code: 0
+2024/06/03 14:39:17,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:06.53, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.01 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000001b733e0fdc0] video:0kB audio:19kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 2.351863%
+[30]: size=      20kB time=00:00:01.18 bitrate= 136.0kbits/s speed= 778x    
+2024/06/03 14:39:35,Stop Recording invoked.
+2024/06/03 14:39:36,Finished recording after milliseconds: 6059.3292
+2024/06/03 14:39:36,Exit code: 0
+2024/06/03 14:39:36,Process Output:
+ - 
+2024/06/03 14:39:44,All finished trim.
+2024/06/03 14:39:44,Exit code: 0
+2024/06/03 14:39:44,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:05.04, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.01 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000001af8d64fdc0] video:0kB audio:30kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.514208%
+[30]: size=      30kB time=00:00:01.86 bitrate= 132.8kbits/s speed=1.01e+03x    
+2024/06/03 14:39:49,All finished trim.
+2024/06/03 14:39:49,Exit code: 0
+2024/06/03 14:39:49,Process Output:
+ - 
+[1]: ffmpeg version 2023-10-18-git-e7a6bba51a-essentials_build-www.gyan.dev Copyright (c) 2000-2023 the FFmpeg developers
+[2]:   built with gcc 13.2.0 (Rev2, Built by MSYS2 project)
+[3]:   configuration: --enable-gpl --enable-version3 --enable-static --pkg-config=pkgconf --disable-w32threads --disable-autodetect --enable-fontconfig --enable-iconv --enable-gnutls --enable-libxml2 --enable-gmp --enable-bzlib --enable-lzma --enable-zlib --enable-libsrt --enable-libssh --enable-libzmq --enable-avisynth --enable-sdl2 --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxvid --enable-libaom --enable-libopenjpeg --enable-libvpx --enable-mediafoundation --enable-libass --enable-libfreetype --enable-libfribidi --enable-libharfbuzz --enable-libvidstab --enable-libvmaf --enable-libzimg --enable-amf --enable-cuda-llvm --enable-cuvid --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-d3d11va --enable-dxva2 --enable-libvpl --enable-libgme --enable-libopenmpt --enable-libopencore-amrwb --enable-libmp3lame --enable-libtheora --enable-libvo-amrwbenc --enable-libgsm --enable-libopencore-amrnb --enable-libopus --enable-libspeex --enable-libvorbis --enable-librubberband
+[4]:   libavutil      58. 27.100 / 58. 27.100
+[5]:   libavcodec     60. 30.102 / 60. 30.102
+[6]:   libavformat    60. 15.100 / 60. 15.100
+[7]:   libavdevice    60.  2.101 / 60.  2.101
+[8]:   libavfilter     9. 11.100 /  9. 11.100
+[9]:   libswscale      7.  4.100 /  7.  4.100
+[10]:   libswresample   4. 11.100 /  4. 11.100
+[11]:   libpostproc    57.  2.100 / 57.  2.100
+[12]: Input #0, mp3, from 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out.mp3':
+[13]:   Metadata:
+[14]:     encoder         : Lavf60.15.100
+[15]:   Duration: 00:00:05.04, start: 0.025057, bitrate: 128 kb/s
+[16]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[17]:     Metadata:
+[18]:       encoder         : Lavc60.30
+[19]: Output #0, mp3, to 'C:/Users/joshu/Documents/GitHub/rlmg-york-yourstoryaudiobooth/Builds/share-your-story-20240603/Share Your Story_Data/StreamingAssets\out_trimmed.mp3':
+[20]:   Metadata:
+[21]:     TSSE            : Lavf60.15.100
+[22]:   Stream #0:0: Audio: mp3, 44100 Hz, stereo, fltp, 128 kb/s
+[23]:     Metadata:
+[24]:       encoder         : Lavc60.30
+[25]: Stream mapping:
+[26]:   Stream #0:0 -> #0:0 (copy)
+[27]: Press [q] to stop, [?] for help
+[28]: size=       0kB time=-00:00:00.01 bitrate=  -0.0kbits/s speed=N/A    
+[29]: [out#0/mp3 @ 000001f3aedc0680] video:0kB audio:31kB subtitle:0kB other streams:0kB global headers:0kB muxing overhead: 1.454477%
+[30]: size=      31kB time=00:00:01.94 bitrate= 132.5kbits/s speed= 960x    
+2024/06/03 14:39:53,Quit application via 'Escape' key.
+2024/06/03 14:39:53,Application Quit

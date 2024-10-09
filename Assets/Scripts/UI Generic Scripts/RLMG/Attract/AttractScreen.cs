@@ -132,8 +132,6 @@ public class AttractScreen : MonoBehaviour
 
 	public void OpenAttractScreen()
 	{
-		Debug.Log("Opening attract...");
-
 		timeOfLastInput = Time.time;
 
 		if (attractScreenButton != null)
@@ -160,8 +158,6 @@ public class AttractScreen : MonoBehaviour
 
 	public void CloseAttractScreen()
 	{
-		Debug.Log("close attract");
-
 		isOpen = false;
 
 		timeOfLastInput = Time.time;

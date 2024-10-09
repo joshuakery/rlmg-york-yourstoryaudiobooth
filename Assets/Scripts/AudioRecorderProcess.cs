@@ -192,7 +192,6 @@ namespace JoshKery.York.AudioRecordingBooth
         /// <param name="exitCodes"></param>
         protected override void OnAllProcessSuccess(int[] exitCodes, StringBuilder outputStringBuilder)
         {
-            //Debug.Log("Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds);
             RLMGLogger.Instance.Log(
                 "Finished recording after milliseconds: " + ((TimeSpan)(DateTime.Now - StartTime)).TotalMilliseconds,
                 MESSAGETYPE.INFO
@@ -200,7 +199,6 @@ namespace JoshKery.York.AudioRecordingBooth
 
             foreach (int exitCode in exitCodes)
             {
-                //UnityEngine.Debug.Log("Exit code: " + exitCode);
                 RLMGLogger.Instance.Log(
                     "Exit code: " + exitCode,
                     MESSAGETYPE.INFO

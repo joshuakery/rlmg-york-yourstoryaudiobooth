@@ -27,6 +27,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
             public string apiEndpoint;
 
+            public string assetsEndpoint;
+
             public string emailAPIEndpoint;
 
             public string emailAPIBearerToken;
@@ -36,8 +38,8 @@ namespace JoshKery.York.AudioRecordingBooth
             /// </summary>
             public int emailAPITimeout = 30;
 
-            public string sampleStoryFile1;
-            public string sampleStoryFile2;
+/*            public string sampleStoryFile1;
+            public string sampleStoryFile2;*/
 
             public string microphoneName;
 
@@ -64,11 +66,11 @@ namespace JoshKery.York.AudioRecordingBooth
 
         private Emailer emailer;
 
-        [SerializeField]
+/*        [SerializeField]
         private AudioClipLoader sampleStoryLoader1;
 
         [SerializeField]
-        private AudioClipLoader sampleStoryLoader2;
+        private AudioClipLoader sampleStoryLoader2;*/
 
         private AudioRecorderProcess audioRecordingProcess;
 
@@ -98,8 +100,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (contentLoader != null)
             {
-                //todo set url and query, etc. for graphql request
                 contentLoader.graphQLURL = configData.apiServer + "/" + configData.apiEndpoint;
+                contentLoader.assetsURL = configData.apiServer + "/" + configData.assetsEndpoint;
                 contentLoader.authToken = configData.apiKey;
 
                 contentLoader.LoadContent();
@@ -115,11 +117,11 @@ namespace JoshKery.York.AudioRecordingBooth
                 emailer.TOKEN               = configData.emailAPIBearerToken;
             }
 
-            if (sampleStoryLoader1 != null)
+/*            if (sampleStoryLoader1 != null)
                 StartCoroutine(sampleStoryLoader1.ReloadCo(configData.sampleStoryFile1));
 
             if (sampleStoryLoader2 != null)
-                StartCoroutine(sampleStoryLoader2.ReloadCo(configData.sampleStoryFile2));
+                StartCoroutine(sampleStoryLoader2.ReloadCo(configData.sampleStoryFile2));*/
 
             if (audioRecordingProcess == null)
                 audioRecordingProcess = FindObjectOfType<AudioRecorderProcess>();

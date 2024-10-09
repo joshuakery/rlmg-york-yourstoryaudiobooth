@@ -50,7 +50,6 @@ namespace GraphQlClient.Core
 				OnRequestEnded requestFailed = new OnRequestEnded(e);
 				requestFailed.FireEvent();
 			}
-			Debug.Log(request.downloadHandler.text);
 
 			OnRequestEnded requestSucceeded = new OnRequestEnded(request.downloadHandler.text);
 			requestSucceeded.FireEvent();

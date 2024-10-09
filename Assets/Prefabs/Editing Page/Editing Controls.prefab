@@ -101,11 +101,11 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5686275}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -8971,10 +8971,13 @@ MonoBehaviour:
   playbackManager: {fileID: 982126689607420990}
   sequenceManager: {fileID: 11400000, guid: a4f08b34006f0844086658be1f1817f0, type: 2}
   playbackHandle: {fileID: 7968357818419710986}
-  playbackHeadWindow: {fileID: 0}
+  playbackHeadWindow: {fileID: 7198886264930777972}
   rightHandleWindow: {fileID: 7003916419377761700}
   leftHandleWindow: {fileID: 6679591054811931076}
   trimSlider: {fileID: 1755497199403603221}
+  trimSliderCachedMin: 0
+  trimSliderCachedMax: 1
+  trimSliderResetAnimationData: {fileID: 11400000, guid: 863c3c7ec390f974da2b262836f12377, type: 2}
   audioVizWindow: {fileID: 393698193586461940}
   rightCoverWindow: {fileID: 5535930394527033287}
   leftCoverWindow: {fileID: 8120539797928572010}
@@ -9570,8 +9573,10 @@ MonoBehaviour:
   playbackManager: {fileID: 982126689607420990}
   button: {fileID: 7269319638654752174}
   image: {fileID: 1479491130035427361}
-  playSprite: {fileID: 21300000, guid: 850b689d9794b4347897fab2ebd7555a, type: 3}
+  playSprite: {fileID: 21300000, guid: a7231efa98994bd479553e729f067ccc, type: 3}
   pauseSprite: {fileID: 21300000, guid: 8b9cd70143847ec47a3ae5b9d87f0ce0, type: 3}
+  playPressedSprite: {fileID: 21300000, guid: 9c91eaeee4ca5964792ac5cae138a6a7, type: 3}
+  pausePressedSprite: {fileID: 21300000, guid: 173b17032b13c0e429a9f39d9591ed2b, type: 3}
 --- !u!114 &7269319638654752174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9595,11 +9600,11 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.29803923}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -10209,11 +10214,11 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -10260,6 +10265,8 @@ MonoBehaviour:
   image: {fileID: 5533765943960364966}
   onSprite: {fileID: 21300000, guid: edadd395cf692124e8b8e05b5c23cd45, type: 3}
   offSprite: {fileID: 21300000, guid: acf4cd87c14648a418a9d779042ed1ba, type: 3}
+  onPressedSprite: {fileID: 21300000, guid: 827ff5652bf359b4c84f39582c78358f, type: 3}
+  offPressedSprite: {fileID: 21300000, guid: 2808f317b597b41479b2d2756522bef4, type: 3}
 --- !u!1 &8524301911376045661
 GameObject:
   m_ObjectHideFlags: 0

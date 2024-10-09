@@ -21,8 +21,8 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (switchManager != null)
             {
-                switchManager.onPlayback += OnSwitchToPlayback;
-                switchManager.onTrim += OnSwitchToTrim;
+                switchManager.onSwitchStart += OnSwitchStart;
+                switchManager.onSwitchComplete += OnSwitchComplete;
             }
 
         }
@@ -31,21 +31,21 @@ namespace JoshKery.York.AudioRecordingBooth
         {
             if (switchManager != null)
             {
-                switchManager.onPlayback -= OnSwitchToPlayback;
-                switchManager.onTrim -= OnSwitchToTrim;
+                switchManager.onSwitchStart -= OnSwitchStart;
+                switchManager.onSwitchComplete -= OnSwitchComplete;
             }
         }
 
-        private void OnSwitchToPlayback()
-        {
-            if (button != null)
-                button.interactable = true;
-        }
-
-        private void OnSwitchToTrim()
+        private void OnSwitchStart(bool isToPlayback)
         {
             if (button != null)
                 button.interactable = false;
+        }
+
+        private void OnSwitchComplete(bool isPlayback)
+        {
+            if (button != null)
+                button.interactable = isPlayback;
         }
 
 

@@ -161,8 +161,6 @@ namespace rlmg.utils
 
         private void HandleKeyPressed(string _value)
         {
-            Debug.Log("The Key pressed is: " + _value);
-
             if(_value == "shift")
             {
                 if (shift_key == null)

@@ -17,6 +17,11 @@ namespace JoshKery.York.AudioRecordingBooth
         public string graphQLURL;
 
         /// <summary>
+        /// URL to which requests for media will be gotten
+        /// </summary>
+        public string assetsURL;
+
+        /// <summary>
         /// Any authentication token needed for the query.
         /// </summary>
         public string authToken;
@@ -45,13 +50,11 @@ namespace JoshKery.York.AudioRecordingBooth
         */
 
 
-        public delegate IEnumerator PopulateContentEvent(string json);
+        [SerializeField]
+        private AudioQuestionsPopulator audioQuestionsPopulator;
 
-        /// <summary>
-        /// Callback event called after successful loading.
-        /// Other MonoBehaviours might subscribe to this.
-        /// </summary>
-        public PopulateContentEvent onPopulateContent;
+        [SerializeField]
+        private SampleStoryPopulator sampleStoryPopulator;
 
         #region Graphql Loading
         /// <summary>
@@ -151,8 +154,11 @@ namespace JoshKery.York.AudioRecordingBooth
 
             SaveContentFileToDisk(text);
 
-            if (onPopulateContent != null)
-                yield return StartCoroutine(onPopulateContent(text));
+            if (audioQuestionsPopulator != null)
+                yield return StartCoroutine(audioQuestionsPopulator.PopulateContent(text));
+
+            if (sampleStoryPopulator != null)
+                yield return StartCoroutine(sampleStoryPopulator.PopulateContent(text));
 
             onPopulateContentFinish.Invoke();
         }

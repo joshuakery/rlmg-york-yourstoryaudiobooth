@@ -108,7 +108,7 @@ namespace JoshKery.York.AudioRecordingBooth
             if (audioSource != null)
             {
                 //Restart if at the end
-                if (audioSource.time >= (audioSource.clip.length / 2f) * 0.99f)
+                if (audioSource.time >= maxValue * (audioSource.clip.length / 2f) * 0.99f)
                     audioSource.time = minValue * (audioSource.clip.length / 2f);
 
                 audioSource.Play();

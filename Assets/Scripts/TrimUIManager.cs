@@ -12,22 +12,51 @@ namespace JoshKery.York.AudioRecordingBooth
         [SerializeField]
         private MinMaxSlider minMaxSlider;
 
+        private AudioRecorderProcess audioRecorderProcess;
+
         [SerializeField]
         private AudioTrimProcess audioTrimProcess;
 
+        private void Awake()
+        {
+            audioRecorderProcess = FindObjectOfType<AudioRecorderProcess>();
+        }
+
         private void OnEnable()
         {
+            if (audioRecorderProcess != null)
+                audioRecorderProcess.onStartRequested += OnAudioRecorderStartRequested;
+
             if (audioClipLoader != null)
                 audioClipLoader.ClipLoaded.AddListener(OnClipLoaded);
         }
 
         private void OnDisable()
         {
+            if (audioRecorderProcess != null)
+                audioRecorderProcess.onStartRequested -= OnAudioRecorderStartRequested;
+
             if (audioClipLoader != null)
                 audioClipLoader.ClipLoaded.RemoveListener(OnClipLoaded);
         }
 
+        private void OnAudioRecorderStartRequested()
+        {
+            Init();
+        }
+
         private void OnClipLoaded()
+        {
+/*            if (audioClipLoader != null)
+            {
+                if (minMaxSlider != null)
+                {
+                    minMaxSlider.SetValues(0f, 1f);
+                }
+            }*/
+        }
+
+        public void Init()
         {
             if (audioClipLoader != null)
             {

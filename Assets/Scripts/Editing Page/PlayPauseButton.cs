@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
-    public class PlayPauseButton : MonoBehaviour
+    public class PlayPauseButton : MonoBehaviour, IPointerDownHandler, IPointerExitHandler
     {
         [SerializeField]
         private PlaybackUIManager playbackManager;
@@ -23,6 +24,12 @@ namespace JoshKery.York.AudioRecordingBooth
 
         [SerializeField]
         private Sprite pauseSprite;
+
+        [SerializeField]
+        private Sprite playPressedSprite;
+
+        [SerializeField]
+        private Sprite pausePressedSprite;
 
         private void Awake()
         {
@@ -42,8 +49,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (switchManager != null)
             {
-                switchManager.onPlayback += OnSwitchToPlayback;
-                switchManager.onTrim += OnSwitchToTrim;
+                switchManager.onSwitchStart += OnSwitchStart;
+                switchManager.onSwitchComplete += OnSwitchComplete;
             }
                 
         }
@@ -61,8 +68,8 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (switchManager != null)
             {
-                switchManager.onPlayback -= OnSwitchToPlayback;
-                switchManager.onTrim -= OnSwitchToTrim;
+                switchManager.onSwitchStart -= OnSwitchStart;
+                switchManager.onSwitchComplete -= OnSwitchComplete;
             }
         }
 
@@ -78,19 +85,39 @@ namespace JoshKery.York.AudioRecordingBooth
                 image.sprite = pauseSprite;
         }
 
-        private void OnSwitchToPlayback()
-        {
-            if (button != null)
-                button.interactable = true;
-        }
-
-        private void OnSwitchToTrim()
+        public void OnSwitchStart(bool isToPlayback)
         {
             if (button != null)
                 button.interactable = false;
         }
 
+        public void OnSwitchComplete(bool isPlayback)
+        {
+            if (button != null)
+                button.interactable = isPlayback;
+        }
 
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            if (image != null)
+            {
+                if (image.sprite == playSprite)
+                    image.sprite = playPressedSprite;
+                else if (image.sprite == pauseSprite)
+                    image.sprite = pausePressedSprite;
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (image != null)
+            {
+                if (image.sprite == playPressedSprite)
+                    image.sprite = playSprite;
+                else if (image.sprite == pausePressedSprite)
+                    image.sprite = pauseSprite;
+            }
+        }
     }
 }
 

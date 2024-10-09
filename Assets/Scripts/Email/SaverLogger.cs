@@ -13,7 +13,9 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public string OUTDIRECTORY = "recordings";
 
-        public string LOGFILENAME = "all_user_info";
+        public string LOGDIRECTORY = "all_user_info";
+
+        public string LOGFILENAMEBASE = "all_user_info";
 
         public string LOGHEADERLINE = "FirstName, LastName, Email, FileName, Subscribe";
 
@@ -35,12 +37,15 @@ namespace JoshKery.York.AudioRecordingBooth
             delimiter = logDelimiter == LOGDELIMITER.COMMA ? "," : "\t";
             extension = logDelimiter == LOGDELIMITER.COMMA ? ".csv" : ".tsv";
 
-            logFilePath = Path.Combine(Application.streamingAssetsPath, LOGFILENAME) + extension;
-
             if (!Directory.Exists(Application.streamingAssetsPath))
-            {
                 Directory.CreateDirectory(Application.streamingAssetsPath);
-            }
+
+            string logDirPath = Path.Combine(Application.streamingAssetsPath, LOGDIRECTORY);
+            if (!Directory.Exists(logDirPath))
+                Directory.CreateDirectory(logDirPath);
+
+            string logFileName = LOGFILENAMEBASE + "_" + DateTime.Now.ToString("yyyy-MM");
+            logFilePath = Path.Combine(logDirPath, logFileName) + extension;
 
             if (!File.Exists(logFilePath))
             {

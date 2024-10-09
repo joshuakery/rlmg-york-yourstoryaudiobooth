@@ -38,6 +38,12 @@ namespace JoshKery.York.AudioRecordingBooth
         [JsonProperty("question_six")]
         public string question_six { get; set; }
 
+        [JsonProperty("play_story_1")]
+        public MediaFile play_story_1 { get; set; }
+
+        [JsonProperty("play_story_2")]
+        public MediaFile play_story_2 { get; set; }
+
         public string GetPrompt(int index)
         {
             switch (index)
@@ -75,6 +81,26 @@ namespace JoshKery.York.AudioRecordingBooth
                 return 5;
             return -1;
         }
+    }
+
+    [System.Serializable]
+    public class MediaFile
+    {
+        #region Graph Properties
+        [JsonProperty("filename_download")]
+        public string filename_download { get; set; }
+
+        [JsonProperty("filename_disk")]
+        public string filename_disk { get; set; }
+        #endregion
+
+        #region Other Fields
+        [JsonIgnore]
+        public string path_download;
+
+        [JsonIgnore]
+        public string local_path;
+        #endregion
     }
 
 

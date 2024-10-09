@@ -29,11 +29,15 @@ namespace JoshKery.York.AudioRecordingBooth
 
         protected override Sequence _Open(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
-            Sequence sequence = DOTween.Sequence();
+            Sequence sequence = null;
 
             Sequence baseOpenSequence = base._Open(SequenceType.UnSequenced, atPosition);
             if (baseOpenSequence != null)
+            {
+                if (sequence == null) sequence = DOTween.Sequence();
+
                 sequence.Join(baseOpenSequence);
+            }   
 
             if (startTween != null && !startTween.IsComplete())
             {
@@ -48,28 +52,40 @@ namespace JoshKery.York.AudioRecordingBooth
                 endTween = null;
             }
 
-            startTween = DOTween.To(
-                () => material.GetFloat("_Start"),
-                x => material.SetFloat("_Start", x),
-                0f,
-                speed
-            );
-            startTween.SetEase(Ease.OutQuad);
-            startTween.onComplete = () => { startTween = null; };
-            sequence.Insert(openDelay, startTween);
+            if (material.GetFloat("_Start") != 0f)
+            {
+                startTween = DOTween.To(
+                    () => material.GetFloat("_Start"),
+                    x => material.SetFloat("_Start", x),
+                    0f,
+                    speed
+                );
+                startTween.SetEase(Ease.OutQuad);
+                startTween.onComplete = () => { startTween = null; };
 
-            endTween = DOTween.To(
-                () => material.GetFloat("_End"),
-                x => material.SetFloat("_End", x),
-                1f,
-                speed
-            );
-            endTween.SetEase(Ease.OutQuad);
-            endTween.onComplete = () => { endTween = null; };
-            sequence.Insert(openDelay, endTween);
+                if (sequence == null) sequence = DOTween.Sequence();
+
+                sequence.Insert(openDelay, startTween);
+            }
+
+            if (material.GetFloat("_End") != 1f)
+            {
+                endTween = DOTween.To(
+                    () => material.GetFloat("_End"),
+                    x => material.SetFloat("_End", x),
+                    1f,
+                    speed
+                );
+                endTween.SetEase(Ease.OutQuad);
+                endTween.onComplete = () => { endTween = null; };
+
+                if (sequence == null) sequence = DOTween.Sequence();
+
+                sequence.Insert(openDelay, endTween);
+            }
 
             //Attach this to the sequence manager if desired
-            if (sequenceManager != null)
+            if (sequence != null && sequenceManager != null)
             {
                 sequenceManager.CreateSequenceIfNull();
                 AttachTweenToSequence(sequenceType, sequence, sequenceManager.currentSequence, false, atPosition, null);
@@ -80,11 +96,16 @@ namespace JoshKery.York.AudioRecordingBooth
 
         protected override Sequence _Close(SequenceType sequenceType = SequenceType.UnSequenced, float atPosition = 0)
         {
-            Sequence sequence = DOTween.Sequence();
+            Sequence sequence = null;
 
             Sequence baseCloseSequence = base._Close(SequenceType.UnSequenced, atPosition);
             if (baseCloseSequence != null)
+            {
+                if (sequence == null) sequence = DOTween.Sequence();
+
                 sequence.Join(baseCloseSequence);
+            }
+                
 
             if (startTween != null && !startTween.IsComplete())
             {
@@ -100,34 +121,45 @@ namespace JoshKery.York.AudioRecordingBooth
 
             if (minMaxSlider != null)
             {
-                startTween = DOTween.To(
-                    () => material.GetFloat("_Start"),
-                    x => material.SetFloat("_Start", x),
-                    minMaxSlider.Values.minValue,
-                    speed
-                );
-                startTween.SetEase(Ease.OutQuad);
-                startTween.onComplete = () => { startTween = null; };
-                sequence.Insert(closeDelay, startTween);
+                if (material.GetFloat("_Start") != minMaxSlider.Values.minValue)
+                {
+                    startTween = DOTween.To(
+                        () => material.GetFloat("_Start"),
+                        x => material.SetFloat("_Start", x),
+                        minMaxSlider.Values.minValue,
+                        speed
+                    );
+                    startTween.SetEase(Ease.OutQuad);
+                    startTween.onComplete = () => { startTween = null; };
 
-                endTween = DOTween.To(
-                    () => material.GetFloat("_End"),
-                    x => material.SetFloat("_End", x),
-                    minMaxSlider.Values.maxValue,
-                    speed
-                );
-                endTween.SetEase(Ease.OutQuad);
-                endTween.onComplete = () => { endTween = null; };
-                sequence.Insert(closeDelay, endTween);
+                    if (sequence == null) sequence = DOTween.Sequence();
+
+                    sequence.Insert(closeDelay, startTween);
+                }
+
+                if (material.GetFloat("_End") != minMaxSlider.Values.maxValue)
+                {
+                    endTween = DOTween.To(
+                        () => material.GetFloat("_End"),
+                        x => material.SetFloat("_End", x),
+                        minMaxSlider.Values.maxValue,
+                        speed
+                    );
+                    endTween.SetEase(Ease.OutQuad);
+                    endTween.onComplete = () => { endTween = null; };
+
+                    if (sequence == null) sequence = DOTween.Sequence();
+
+                    sequence.Insert(closeDelay, endTween);
+                }
             }
 
             //Attach this to the sequence manager if desired
-            if (sequenceManager != null)
+            if (sequence != null && sequenceManager != null)
             {
                 sequenceManager.CreateSequenceIfNull();
                 AttachTweenToSequence(sequenceType, sequence, sequenceManager.currentSequence, false, atPosition, null);
             }
-
 
             return sequence;
 

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
 using JoshKery.GenericUI.DOTweenHelpers;
+using DG.Tweening;
 
 namespace JoshKery.York.AudioRecordingBooth
 {
     public class PlaybackTrimSwitchManager : MonoBehaviour
     {
+        private AudioRecorderProcess audioRecorderProcess;
+
         [SerializeField]
         private PlaybackUIManager playbackManager;
 
@@ -28,6 +31,15 @@ namespace JoshKery.York.AudioRecordingBooth
 
         [SerializeField]
         private MinMaxSlider trimSlider;
+
+        [SerializeField]
+        private float trimSliderCachedMin = 0f;
+
+        [SerializeField]
+        private float trimSliderCachedMax = 1f;
+
+        [SerializeField]
+        private UIAnimationData trimSliderResetAnimationData;
 
         [SerializeField]
         private AudioVizWindow audioVizWindow;
@@ -52,11 +64,14 @@ namespace JoshKery.York.AudioRecordingBooth
 
         public bool isPlayback = true;
 
-        public delegate void OnSwitchToTrimEvent();
-        public OnSwitchToTrimEvent onTrim;
+        public delegate void OnCancelTrimEvent();
+        public OnCancelTrimEvent onCancel;
 
-        public delegate void OnSwitchToPlaybackEvent();
-        public OnSwitchToPlaybackEvent onPlayback;
+        public delegate void OnSwitchStartEvent(bool isToPlayback);
+        public OnSwitchStartEvent onSwitchStart;
+
+        public delegate void OnSwitchCompleteEvent(bool isPlayback);
+        public OnSwitchCompleteEvent onSwitchComplete;
 
         private bool trimSliderIsUnTrimmed
         {
@@ -69,150 +84,306 @@ namespace JoshKery.York.AudioRecordingBooth
             }
         }
 
+        private bool trimSliderIsUnchanged
+        {
+            get
+            {
+                if (trimSlider != null)
+                    return trimSlider.Values.minValue == trimSliderCachedMin && trimSlider.Values.maxValue == trimSliderCachedMax;
+                else
+                    return false;
+            }
+        }
+
+        private void Awake()
+        {
+            audioRecorderProcess = FindObjectOfType<AudioRecorderProcess>();
+        }
+
+        private void OnEnable()
+        {
+            if (audioRecorderProcess != null)
+                audioRecorderProcess.onStartRequested += OnAudioRecorderStartRequested;
+        }
+
+        private void OnDisable()
+        {
+            if (audioRecorderProcess != null)
+                audioRecorderProcess.onStartRequested -= OnAudioRecorderStartRequested;
+        }
+
+        private void OnAudioRecorderStartRequested()
+        {
+            trimSliderCachedMin = 0;
+            trimSliderCachedMax = 1;
+        }
+
+        private Tween ResetTrim(bool doCompleteImmediately = false)
+        {
+            if (trimSlider == null) return null;
+
+            if (doCompleteImmediately)
+            {
+                onCancel?.Invoke();
+                trimSlider.SetValues(trimSliderCachedMin, trimSliderCachedMax);
+                return null;
+            }
+
+            Sequence wrapper = DOTween.Sequence();
+
+            wrapper.InsertCallback(0f, () => { onCancel?.Invoke(); });
+
+            Tween minTween = DOTween.To(
+                    () => trimSlider.Values.minValue,
+                    (x) => trimSlider.SetValues(x, trimSlider.Values.maxValue),
+                    trimSliderCachedMin,
+                    trimSliderResetAnimationData.duration
+                );
+            minTween.SetEase(trimSliderResetAnimationData.ease);
+            wrapper.Join(minTween);
+
+            Tween maxTween = DOTween.To(
+                () => trimSlider.Values.maxValue,
+                (x) => trimSlider.SetValues(trimSlider.Values.minValue, x),
+                trimSliderCachedMax,
+                trimSliderResetAnimationData.duration
+            );
+            maxTween.SetEase(trimSliderResetAnimationData.ease);
+            wrapper.Join(maxTween);
+
+            return wrapper;
+        }
+
+        private Tween SwitchToPlayback()
+        {
+            Sequence wrapper = DOTween.Sequence();
+
+            wrapper.InsertCallback(0f, () => {
+                trimSliderCachedMin = trimSlider.Values.minValue;
+                trimSliderCachedMax = trimSlider.Values.maxValue;
+
+                //Pause AND start start to min
+                playbackManager.Init();
+            });
+
+            if (rightHandleWindow != null)
+                wrapper.Insert(0f, rightHandleWindow.Close(SequenceType.UnSequenced));
+
+            if (leftHandleWindow != null)
+                wrapper.Insert(0f, leftHandleWindow.Close(SequenceType.UnSequenced));
+
+            if (leftCoverWindow != null)
+                wrapper.Insert(0f, leftCoverWindow.Open(SequenceType.UnSequenced));
+
+            if (rightCoverWindow != null)
+                wrapper.Insert(0f, rightCoverWindow.Open(SequenceType.UnSequenced));
+
+            if (trimSliderIsUnTrimmed)
+            {
+                if (middleGraphicWindow != null)
+                    wrapper.Insert(0f, middleGraphicWindow.Close(SequenceType.UnSequenced));
+
+                if (audioVizWindow != null)
+                    wrapper.Insert(0f, audioVizWindow.Close(SequenceType.UnSequenced));
+
+                if (borderFadeWindow != null)
+                    wrapper.Insert(0f, borderFadeWindow.Close(SequenceType.UnSequenced));
+
+                if (playbackHandle != null)
+                    wrapper.Insert(0f, playbackHandle.Open(SequenceType.UnSequenced));
+            }
+            else
+            {
+                if (measurementDisplayWindow != null)
+                    wrapper.Insert(0f, measurementDisplayWindow.Close(SequenceType.UnSequenced));
+
+                if (middleGraphicWindow != null)
+                    wrapper.Insert(0.5f, middleGraphicWindow.Close(SequenceType.UnSequenced));
+
+                if (audioVizWindow != null)
+                    wrapper.Insert(0.5f, audioVizWindow.Close(SequenceType.UnSequenced));
+
+                if (borderFadeWindow != null)
+                    wrapper.Insert(0.9f, borderFadeWindow.Close(SequenceType.UnSequenced));
+
+                if (playbackHandle != null)
+                    wrapper.Insert(0.9f, playbackHandle.Open(SequenceType.UnSequenced));
+
+                if (measurementDisplay != null)
+                    wrapper.InsertCallback(0.9f, () => { measurementDisplay.UpdateDisplay(); });
+
+                if (measurementDisplayWindow != null)
+                    wrapper.Insert(0.9f, measurementDisplayWindow.Open(SequenceType.UnSequenced));
+            }
+
+            return wrapper;
+        }
+
+        private Tween SwitchToTrim()
+        {
+            Sequence wrapper = DOTween.Sequence();
+
+            wrapper.InsertCallback(0f, () => {
+                //Only pause here so we don't jump the slider around
+                playbackManager.PauseAudio();
+            });
+
+            if (playbackHandle != null)
+                wrapper.Insert(0f, playbackHandle.Close(SequenceType.UnSequenced));
+
+            if (borderFadeWindow != null)
+                wrapper.Insert(0f, borderFadeWindow.Open(SequenceType.UnSequenced));
+
+            if (leftCoverWindow != null)
+                wrapper.Insert(0f, leftCoverWindow.Close(SequenceType.UnSequenced));
+
+            if (rightCoverWindow != null)
+                wrapper.Insert(0f, rightCoverWindow.Close(SequenceType.UnSequenced));
+
+            if (trimSliderIsUnTrimmed)
+            {
+                //Close out the rest of the trim graphics simultaneously with those above
+                //Because the measurementDisplayWindow and middleGraphicWindow won't appear to change
+
+                if (middleGraphicWindow != null)
+                    wrapper.Insert(0f, middleGraphicWindow.Open(SequenceType.UnSequenced));
+
+                if (audioVizWindow != null)
+                    wrapper.Insert(0f, audioVizWindow.Open(SequenceType.UnSequenced));
+
+                if (rightHandleWindow != null)
+                    wrapper.Insert(0f, rightHandleWindow.Open(SequenceType.UnSequenced));
+
+                if (leftHandleWindow != null)
+                    wrapper.Insert(0f, leftHandleWindow.Open(SequenceType.UnSequenced));
+            }
+            else
+            {
+                //Progressively close out the rest of the trim graphics
+
+                if (measurementDisplayWindow != null)
+                    wrapper.Insert(0f, measurementDisplayWindow.Close(SequenceType.UnSequenced));
+
+                if (middleGraphicWindow != null)
+                    wrapper.Insert(0.5f, middleGraphicWindow.Open(SequenceType.UnSequenced));
+
+                if (audioVizWindow != null)
+                    wrapper.Insert(0.5f, audioVizWindow.Open(SequenceType.UnSequenced));
+
+                if (rightHandleWindow != null)
+                    wrapper.Insert(0.7f, rightHandleWindow.Open(SequenceType.UnSequenced));
+
+                if (leftHandleWindow != null)
+                    wrapper.Insert(0.7f, leftHandleWindow.Open(SequenceType.UnSequenced));
+
+                if (measurementDisplay != null)
+                    wrapper.InsertCallback(0.7f, () => { measurementDisplay.UpdateDisplay(); });
+
+                if (measurementDisplayWindow != null)
+                    wrapper.Insert(0.7f, measurementDisplayWindow.Open(SequenceType.UnSequenced));
+            }
+
+            return wrapper;
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="doSwitchToPlaybackMode"></param>
-        public void Switch(bool doSwitchToPlaybackMode)
+        public Tween Switch(bool doSwitchToPlaybackMode, bool doCancelTrimChanges = false, bool doCompleteImmediately = false)
         {
+            if (playbackManager == null) return null;
+            if (trimSlider == null) return null;
+            if (sequenceManager == null) return null;
+
             isPlayback = doSwitchToPlaybackMode;
 
-            if (playbackManager != null)
+            sequenceManager.KillCurrentSequence();
+
+            Sequence wrapper = DOTween.Sequence();
+
+            if (doCompleteImmediately)
             {
-                if (trimSlider != null)
+                if (doCancelTrimChanges && !trimSliderIsUnchanged)
+                {
+                    // Temporarily SetValues to target so that
+                    // positionTween in SliderMiddleGraphicWindow is properly set up
+                    float auxMin = trimSlider.Values.minValue;
+                    float auxMax = trimSlider.Values.maxValue;
+
+                    // Before doing the switch tween, reset the slider
+                    ResetTrim(true);
+                    playbackManager.minValue = trimSlider.Values.minValue;
+                    playbackManager.maxValue = trimSlider.Values.maxValue;
+
+                    // Then switch to playback
+                    Tween switchToPlaybackTween = SwitchToPlayback();
+                    switchToPlaybackTween.Complete();
+
+                    // Undo SetValues above
+                    trimSlider.SetValues(auxMin, auxMax);
+                }
+                else
                 {
                     playbackManager.minValue = trimSlider.Values.minValue;
                     playbackManager.maxValue = trimSlider.Values.maxValue;
+
+                    Tween switchTween;
+                    if (doSwitchToPlaybackMode)
+                        switchTween = SwitchToPlayback();
+                    else
+                        switchTween = SwitchToTrim();
+                    switchTween.Complete();
                 }
 
-                if (doSwitchToPlaybackMode) //Pause AND start start to min
-                {
-                    playbackManager.Init();
-                }
-                else //Only pause here so we don't jump the slider around
-                    playbackManager.PauseAudio();
+                onSwitchComplete?.Invoke(doSwitchToPlaybackMode);
 
-            }
-
-/*            if (playbackHeadWindow != null && doSwitchToPlaybackMode)
-                playbackHeadWindow.Close();*/
-
-            if (sequenceManager != null)
-            {
-                sequenceManager.KillCurrentSequence();
-            }
-
-            if (doSwitchToPlaybackMode)
-            {
-                if (rightHandleWindow != null)
-                    rightHandleWindow.Close(0f);
-
-                if (leftHandleWindow != null)
-                    leftHandleWindow.Close(0f);
-
-                if (leftCoverWindow != null)
-                    leftCoverWindow.Open(0f);
-
-                if (rightCoverWindow != null)
-                    rightCoverWindow.Open(0f);
-
-                if (trimSliderIsUnTrimmed)
-                {
-                    if (middleGraphicWindow != null)
-                        middleGraphicWindow.Close(0f);
-
-                    if (audioVizWindow != null)
-                        audioVizWindow.Close(0f);
-
-                    if (borderFadeWindow != null)
-                        borderFadeWindow.Close(0f);
-
-                    if (playbackHandle != null)
-                        playbackHandle.Open(0f);
-                }
-                else
-                {
-                    if (measurementDisplayWindow != null)
-                        measurementDisplayWindow.Close(0f);
-
-                    if (middleGraphicWindow != null)
-                        middleGraphicWindow.Close(0.5f);
-
-                    if (audioVizWindow != null)
-                        audioVizWindow.Close(0.5f);
-
-                    if (borderFadeWindow != null)
-                        borderFadeWindow.Close(0.9f);
-
-                    if (playbackHandle != null)
-                        playbackHandle.Open(0.9f);
-
-                    if (measurementDisplay != null)
-                        sequenceManager.InsertCallback(0.9f, () => { measurementDisplay.UpdateDisplay(); });
-
-                    if (measurementDisplayWindow != null)
-                        measurementDisplayWindow.Open(0.9f);
-                }
-
-                
-
-                onPlayback?.Invoke();
+                return null;
             }
             else
             {
-                if (playbackHandle != null)
-                    playbackHandle.Close(0f);
+                wrapper.InsertCallback(0f, () => { onSwitchStart?.Invoke(doSwitchToPlaybackMode); });
 
-                if (borderFadeWindow != null)
-                    borderFadeWindow.Open(0f);
-
-                if (leftCoverWindow != null)
-                    leftCoverWindow.Close(0f);
-
-                if (rightCoverWindow != null)
-                    rightCoverWindow.Close(0f);
-
-                if (trimSliderIsUnTrimmed)
+                if (doCancelTrimChanges && !trimSliderIsUnchanged)
                 {
-                    if (middleGraphicWindow != null)
-                        middleGraphicWindow.Open(0f);
+                    // Before doing the switch tween, reset the slider
+                    Tween resetTween = ResetTrim();
+                    resetTween.OnComplete(() =>
+                    {
+                        playbackManager.minValue = trimSlider.Values.minValue;
+                        playbackManager.maxValue = trimSlider.Values.maxValue;
+                    });
+                    wrapper.Join(resetTween);
 
-                    if (audioVizWindow != null)
-                        audioVizWindow.Open(0f);
+                    // Temporarily SetValues to target so that
+                    // positionTween in SliderMiddleGraphicWindow is properly set up
+                    float auxMin = trimSlider.Values.minValue;
+                    float auxMax = trimSlider.Values.maxValue;
+                    trimSlider.SetValues(trimSliderCachedMin, trimSliderCachedMax);
 
-                    if (rightHandleWindow != null)
-                        rightHandleWindow.Open(0f);
+                    // Then do switch tween after reset
+                    wrapper.Append(SwitchToPlayback());
+                    wrapper.AppendCallback(() => { onSwitchComplete?.Invoke(true); });
 
-                    if (leftHandleWindow != null)
-                        leftHandleWindow.Open(0f);
+                    // Undo SetValues above
+                    trimSlider.SetValues(auxMin, auxMax);
                 }
                 else
                 {
-                    if (measurementDisplayWindow != null)
-                        measurementDisplayWindow.Close(0f);
+                    playbackManager.minValue = trimSlider.Values.minValue;
+                    playbackManager.maxValue = trimSlider.Values.maxValue;
 
-                    if (middleGraphicWindow != null)
-                        middleGraphicWindow.Open(0.5f);
-
-                    if (audioVizWindow != null)
-                        audioVizWindow.Open(0.5f);
-
-                    if (rightHandleWindow != null)
-                        rightHandleWindow.Open(0.7f);
-
-                    if (leftHandleWindow != null)
-                        leftHandleWindow.Open(0.7f);
-
-                    if (measurementDisplay != null)
-                        sequenceManager.InsertCallback(0.7f, () => { measurementDisplay.UpdateDisplay(); });
-
-                    if (measurementDisplayWindow != null)
-                        measurementDisplayWindow.Open(0.7f);
+                    if (doSwitchToPlaybackMode)
+                        wrapper.Join(SwitchToPlayback());
+                    else
+                        wrapper.Join(SwitchToTrim());
                 }
 
-                onTrim?.Invoke();
+                wrapper.AppendCallback(() => { onSwitchComplete?.Invoke(doSwitchToPlaybackMode); });
+
+                return wrapper;
             }
+
         }
 
         public void OnSwitch()

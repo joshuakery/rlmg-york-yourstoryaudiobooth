@@ -187,8 +187,6 @@ namespace JoshKery.GenericUI.ContentLoading
 		{
 			StopAllCoroutines();
 
-			Debug.Log("Loading content...");
-
 			StartCoroutine(LoadContentCoroutine());
 		}
 
@@ -319,9 +317,14 @@ namespace JoshKery.GenericUI.ContentLoading
 		/// <param name="onlinePath">URL to download from</param>
 		/// <param name="localPath">Local path to save to</param>
 		/// <returns></returns>
-		protected virtual IEnumerator SaveMediaToDisk(string onlinePath, string localPath)
+		public virtual IEnumerator SaveMediaToDisk(string onlinePath, string localPath, bool isTexture=true)
         {
-			UnityWebRequest webRequest = UnityWebRequestTexture.GetTexture(onlinePath);
+			UnityWebRequest webRequest = null;
+			if (isTexture)
+				webRequest = UnityWebRequestTexture.GetTexture(onlinePath);
+			else
+				webRequest = UnityWebRequest.Get(onlinePath);
+
 			yield return webRequest.SendWebRequest();
 
 			switch (webRequest.result)
@@ -334,6 +337,9 @@ namespace JoshKery.GenericUI.ContentLoading
 				case UnityWebRequest.Result.Success:
 					File.WriteAllBytes(localPath, webRequest.downloadHandler.data);
 					yield return StartCoroutine(SaveMediaToDiskSuccess(webRequest.result));
+					break;
+				default:
+					yield return StartCoroutine(SaveMediaToDiskFailure(webRequest));
 					break;
 			}
 		}
@@ -355,7 +361,8 @@ namespace JoshKery.GenericUI.ContentLoading
 		/// <returns></returns>
 		protected virtual IEnumerator SaveMediaToDiskFailure(UnityWebRequest request)
 		{
-			RLMGLogger.Instance.Log("Save Media to Disk Failure: " + request.error);
+			RLMGLogger.Instance.Log("Save Media to Disk Failure: " + request.error, MESSAGETYPE.ERROR);
+			RLMGLogger.Instance.Log("Save Media to Disk Failure: Download Handler Error: " + request.downloadHandler.error, MESSAGETYPE.ERROR);
 			yield return null;
 		}
         #endregion

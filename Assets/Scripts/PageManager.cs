@@ -93,8 +93,6 @@ namespace JoshKery.York.AudioRecordingBooth
             audioRecorderProcess = FindObjectOfType<AudioRecorderProcess>();
             audioTrimProcess = FindObjectOfType<AudioTrimProcess>();
 
-            //doneEditingButtonWindow = doneEditingButton.gameObject.GetComponent<BaseWindow>();
-
             mainSubmissionHandler = FindObjectOfType<MainSubmissionHandler>();
 
             emailSubmissionHandler = FindObjectOfType<EmailSubmissionHandler>();
